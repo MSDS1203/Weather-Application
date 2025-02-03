@@ -19,7 +19,7 @@ app.get('/search', async (req, res) => {
                 limit: 5, // limit to 5 recommendations
                 appid: OPENWEATHER_API_KEY }
         });
-        // format cities as: "city, country" (ex. "New York, US")
+        // format cities as: "city, state, country" (ex. "Greenville, North Carolina, US")
         const cities = response.data.map(city => `${city.name}, ${city.state}, ${city.country}`);
         res.json(cities);
     } catch (error) {
