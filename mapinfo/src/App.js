@@ -1,5 +1,6 @@
 import React from "react";
 import MapComponent from "./MapComponent";
+import NavigationBar from "./NavBar";
 
 const App = () => {
   return (
