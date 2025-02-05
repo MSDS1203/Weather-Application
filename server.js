@@ -8,7 +8,7 @@ const PORT = 3000;
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
 
 // get city recommendations based on search query
-app.get('/search', async (req, res) => {
+app.get('/citySearch', async (req, res) => {
     const query = req.query.q;
     if (!query) return res.status(400).json({ error: 'Missing search query parameter' });
 

@@ -5,4 +5,4 @@
 
 # Test/Demo results
 * Run server.js: "node server.js"
-* Visit link in browser, replace "QUERY" with a city name: http://localhost:3000/search?q=QUERY
+* CITY SEARCH: Visit link & replace "QUERY" with a city name. Can also do city,state,country (ex. Greenville,NC,US): http://localhost:3000/citySearch?q=QUERY
