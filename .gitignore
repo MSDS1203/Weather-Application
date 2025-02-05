@@ -4,6 +4,9 @@ node_modules/
 # Environment variables (API keys, etc.)
 .env
 
+# Logs
+*.log
+
 # Debug and editor-specific files
 .vscode/
 .idea/
