@@ -61,5 +61,28 @@ app.get('/zipSearch', async (req, res) => {
     }
 });
 
+// Route to get weather by coordinates
+app.get("/weather", async (req, res) => {
+    const { lat, lon } = req.query;
+
+    // Validate input
+    if (!lat || !lon) {
+        return res.status(400).json({ error: "Latitude and Longitude are required" });
+    }
+
+    try {
+        // Fetch weather data from OpenWeatherMap
+        const response = await axios.get("https://api.openweathermap.org/data/2.5/weather", {
+            params: { lat, lon, appid: OWM_API_KEY, units: "imperial" }
+        });
+
+        res.json(response.data); // Return full API response
+    } catch (error) {
+        console.error("Error fetching weather data:", error.response?.data || error.message);
+        res.status(500).json({ error: "Failed to fetch weather data" });
+    }
+});
+
+
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
