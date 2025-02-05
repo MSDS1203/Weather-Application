@@ -8,6 +8,7 @@ const PORT = 3000;
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
 
 // get city recommendations based on search query (city name OR city-name,state-code,country-code)
+//URL: http://localhost:3000/citySearch?q=QUERY (replace QUERY with search query)
 app.get('/citySearch', async (req, res) => {
     const query = req.query.q;
     if (!query) return res.status(400).json({ error: 'Missing search query parameter' });
@@ -30,6 +31,7 @@ app.get('/citySearch', async (req, res) => {
 
 // get coordinates based on zip code and country code divided by comma 
 // country code is optional, but recommended
+// URL: localhost:3000/zipSearch?q=QUERY (replace QUERY with zip and country code)
 app.get('/zipSearch', async (req, res) => {
     const query = req.query.q;
     if (!query) return res.status(400).json({ error: 'Missing search query parameter' });
