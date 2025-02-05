@@ -73,7 +73,7 @@ app.get("/weather", async (req, res) => {
     try {
         // Fetch weather data from OpenWeatherMap
         const response = await axios.get("https://api.openweathermap.org/data/2.5/weather", {
-            params: { lat, lon, appid: OWM_API_KEY, units: "imperial" }
+            params: { lat, lon, appid: OPENWEATHER_API_KEY, units: "imperial" }
         });
 
         res.json(response.data); // Return full API response
