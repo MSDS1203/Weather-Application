@@ -7,7 +7,7 @@ const app = express();
 const PORT = 3000;
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
 
-// get city recommendations based on search query
+// get city recommendations based on search query (city name OR city-name,state-code,country-code)
 app.get('/citySearch', async (req, res) => {
     const query = req.query.q;
     if (!query) return res.status(400).json({ error: 'Missing search query parameter' });
@@ -27,5 +27,37 @@ app.get('/citySearch', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch city data' });
     }
 });
+
+// get coordinates based on zip code and country code divided by comma 
+// country code is optional, but recommended
+app.get('/zipSearch', async (req, res) => {
+    const query = req.query.q;
+    if (!query) return res.status(400).json({ error: 'Missing search query parameter' });
+
+    try {
+        const response = await axios.get(`http://api.openweathermap.org/geo/1.0/zip`, {
+            params: { 
+                zip: query, // user-provided search (ex. "27858,US")
+                //limit: 5, // limit to 5 recommendations
+                appid: OPENWEATHER_API_KEY }
+        });
+
+        const { name, country, lat, lon } = response.data;
+
+        // format response
+        const formattedData = { 
+            location: `${name}, ${country}`, 
+            latitude: lat, 
+            longitude: lon 
+        };
+
+        res.json(formattedData);
+
+    } catch (error) {
+        console.error('Error fetching zip code coordinates:', error);
+        res.status(500).json({ error: 'Failed to fetch coordinates.' });
+    }
+});
+
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
