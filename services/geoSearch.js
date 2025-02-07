@@ -49,14 +49,14 @@ async function searchZip(query) {
 }
 
 // get weather data based on latitude and longitude
-// URL: localhost:3000/weather?lat=LATITUDE&lon=LONGITUDE (replace LATITUDE and LONGITUDE with coordinates)
-async function getWeatherData(lat, lon) {
+async function getWeatherData(lat, lon, unit) {
     try {
         const response = await axios.get(`http://api.openweathermap.org/data/2.5/weather`, {
             params: { 
                 lat, 
                 lon,
-                appid: OPENWEATHER_API_KEY }
+                appid: OPENWEATHER_API_KEY,
+                units: unit }
         });
 
         return response.data;
