@@ -9,7 +9,7 @@ const PORT = 3000;
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
 
 // get city recommendations based on search query (city name OR city-name,state-code,country-code)
-//URL: http://localhost:3000/citySearch?q=QUERY (replace QUERY with search query)
+// URL: http://localhost:3000/citySearch?q=QUERY (replace QUERY with search query)
 app.get('/citySearch', async (req, res) => {
     const query = req.query.q;
     if (!query) return res.status(400).json({ error: 'Missing search query parameter' });
@@ -40,9 +40,10 @@ app.get('/zipSearch', async (req, res) => {
 // Route to get weather by coordinates
 // URL: localhost:3000/weather?lat=LATITUDE&lon=LONGITUDE&unit=UNIT 
 // (replace LATITUDE and LONGITUDE with coordinates, UNIT with imperial or metric)
+// unit field is optional, default is imperial
 app.get("/weather", async (req, res) => {
-    // NEED TO SETUP A DEFAULT VALUE FOR UNIT (or just use api standard)
-    const { lat, lon, unit } = req.query;
+    const { lat, lon } = req.query;
+    const unit = req.query.unit || 'imperial'; // if unit not in query, default to imperial
 
     // Validate input
     if (!lat || !lon || !unit) {
