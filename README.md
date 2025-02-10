@@ -6,3 +6,11 @@
 # Test/Demo results
 * Run server.js: "node server.js"
 * CITY SEARCH: Visit link & replace "QUERY" with a city name. Can also do city,state,country (ex. Greenville,NC,US): http://localhost:3000/citySearch?q=QUERY
+
+----------------------------------------------------------------
+## getMapInfo
+
+Make sure you change directory into the "mapandmore" folder then run the following command to start the program:
+npm start
+
+In the .env file (of the mapandmore directory), make sure you add your API key from your Google Console (Map API for JavaScript)
