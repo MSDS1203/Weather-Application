@@ -1,8 +1,7 @@
 const axios = require('axios');
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
 
-// get city recommendations based on search query (city name OR city-name,state-code,country-code)
-//URL: http://localhost:3000/citySearch?q=QUERY (replace QUERY with search query)
+// get city recommendations based on search query
 async function searchCity(query) {
     try {
         const response = await axios.get(`http://api.openweathermap.org/geo/1.0/direct`, {
@@ -23,9 +22,7 @@ async function searchCity(query) {
     }
 }
 
-// get coordinates based on zip code and country code divided by comma 
-// country code is optional, but recommended
-// URL: localhost:3000/zipSearch?q=QUERY (replace QUERY with zip and country code)
+// get coordinates based on zip code and country code
 async function searchZip(query) {
     try {
         const response = await axios.get(`http://api.openweathermap.org/geo/1.0/zip`, {
