@@ -1,15 +1,18 @@
 // dependencies
 const express = require('express');
 const axios = require('axios');
+const cors = require('cors');
 require('dotenv').config(); 
 const {searchCity, searchZip, getWeatherData} = require('./services/geoSearch');
 
 const app = express();
-const PORT = 3000;
+app.use(cors());
+
+const PORT = process.env.PORT || 3001;
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
 
 // get city recommendations based on search query (city name OR city-name,state-code,country-code)
-// URL: http://localhost:3000/citySearch?q=QUERY (replace QUERY with search query)
+// URL: http://localhost:3001/citySearch?q=QUERY (replace QUERY with search query)
 app.get('/citySearch', async (req, res) => {
     const query = req.query.q;
     if (!query) return res.status(400).json({ error: 'Missing search query parameter' });
@@ -24,7 +27,7 @@ app.get('/citySearch', async (req, res) => {
 
 // get coordinates based on zip code and country code divided by comma 
 // country code is optional, but recommended
-// URL: localhost:3000/zipSearch?q=QUERY (replace QUERY with zip and country code)
+// URL: localhost:3001/zipSearch?q=QUERY (replace QUERY with zip and country code)
 app.get('/zipSearch', async (req, res) => {
     const query = req.query.q;
     if (!query) return res.status(400).json({ error: 'Missing search query parameter' });
@@ -38,7 +41,7 @@ app.get('/zipSearch', async (req, res) => {
 });
 
 // Route to get weather by coordinates
-// URL: localhost:3000/weather?lat=LATITUDE&lon=LONGITUDE&unit=UNIT 
+// URL: localhost:3001/weather?lat=LATITUDE&lon=LONGITUDE&unit=UNIT 
 // (replace LATITUDE and LONGITUDE with coordinates, UNIT with imperial or metric)
 // unit field is optional, default is imperial
 app.get("/weather", async (req, res) => {
