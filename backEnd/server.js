@@ -5,7 +5,7 @@ require('dotenv').config();
 const {searchCity, searchZip, getWeatherData} = require('./services/geoSearch');
 
 const app = express();
-const PORT = 3000;
+const PORT = 8000;
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
 
 // get city recommendations based on search query (city name OR city-name,state-code,country-code)

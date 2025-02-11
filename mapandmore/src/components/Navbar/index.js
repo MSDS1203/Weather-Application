@@ -20,6 +20,10 @@ const Navbar = () => {
                     <NavLink to ="/MapComponent" activeStyle>
                         Map Component
                     </NavLink>
+
+                    <NavLink to ="/search" activeStyle>
+                        Search
+                    </NavLink>
                 </NavMenu>
             </Nav>
         </>
