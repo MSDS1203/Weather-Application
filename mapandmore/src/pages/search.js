@@ -60,8 +60,8 @@ const Search = () => {
                 <ul>
                     {cityResults.map((city, index) => (
                         <li key={index}>
-                            {city.name}, {city.state}, {city.country} 
-                            <button onClick={() => getWeather(city.lat, city.lon)}>Get Weather</button>
+                            {city.location}, {city.latitude}, {city.longitude} 
+                            <button /*</li>onClick={() => getWeather(city.lat, city.lon)}*/>Get Weather</button>
                         </li>
                     ))}
                 </ul>
