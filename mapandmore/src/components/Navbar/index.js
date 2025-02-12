@@ -13,16 +13,32 @@ const Navbar = () => {
                 <Bars />
 
                 <NavMenu>
-                    <NavLink to = "/saved" activeStyle>
+                    <NavLink to = "/saved" style={({ isActive }) => ({
+                        fontWeight: isActive ? "bold" : "normal",
+                        color: isActive ? "blue" : "black",
+                    })} >
                         Saved Locations
                     </NavLink>
 
-                    <NavLink to ="/MapComponent" activeStyle>
+                    <NavLink to ="/MapComponent" style={({ isActive }) => ({
+                        fontWeight: isActive ? "bold" : "normal",
+                        color: isActive ? "blue" : "black",
+                    })}>
                         Map Component
                     </NavLink>
 
-                    <NavLink to ="/search" activeStyle>
+                    <NavLink to ="/search" style={({ isActive }) => ({
+                        fontWeight: isActive ? "bold" : "normal",
+                        color: isActive ? "blue" : "black",
+                    })}>
                         Search
+                    </NavLink>
+
+                    <NavLink to ="/" style={({ isActive }) => ({
+                        fontWeight: isActive ? "bold" : "normal",
+                        color: isActive ? "blue" : "black",
+                    })}>
+                        Home
                     </NavLink>
                 </NavMenu>
             </Nav>
