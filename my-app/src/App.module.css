@@ -1,0 +1,29 @@
+/* 
+brown: 331E36
+pruple: 41337A
+aquaish: 6EA4BF
+light blue: C2EFEB
+lightest green: ECFEE8
+*/
+.container {
+    text-align: center;
+    height : 100vh;
+    color: #331E36;
+    font-size: 20px;
+    padding: 40px;
+    background-color: rgb(96, 177, 177);
+  }
+  
+  input {
+    background-color: #C2EFEB;
+    color: black;
+    border: 1px solid #41337A;
+    padding: 8px;
+    border-radius: 5px;
+  }
+  
+  input:focus {
+    background-color: lightcyan;
+    outline: none;
+    border: 1px solid blue;
+  }

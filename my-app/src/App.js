@@ -1,4 +1,13 @@
-import './App.css';
+/* MOONPHASES
+    0 – new moon
+    0-0.25 – waxing crescent
+    0.25 – first quarter
+    0.25-0.5 – waxing gibbous
+    0.5 – full moon
+    0.5-0.75 – waning gibbous
+    0.75 – last quarter
+    0.75 -1 – waning crescent*/
+import styles from './App.module.css';
 import React, { useState } from "react";
 
 const API_KEY = "DZQTE9HYT64JDRCBJBZR9DBJ9";
@@ -54,8 +63,31 @@ function AstronomyInfo() {
     getAstronomicalInfo();
   };
 
+
+  let moonTerm = "Unknown Phase";
+  if (astronomyData) {
+    if (astronomyData.moonphase === 0) {
+      moonTerm = "New Moon";
+    } else if (astronomyData.moonphase > 0 && astronomyData.moonphase < 0.25) {
+      moonTerm = "Waxing Crescent";
+    } else if (astronomyData.moonphase === 0.25) {
+      moonTerm = "First Quarter";
+    } else if (astronomyData.moonphase > 0.25 && astronomyData.moonphase < 0.5) {
+      moonTerm = "Waxing Gibbous";
+    } else if (astronomyData.moonphase === 0.5) {
+      moonTerm = "Full Moon";
+    } else if (astronomyData.moonphase > 0.5 && astronomyData.moonphase < 0.75) {
+      moonTerm = "Waning Gibbous";
+    } else if (astronomyData.moonphase === 0.75) {
+      moonTerm = "Last Quarter";
+    } else if (astronomyData.moonphase > 0.75 && astronomyData.moonphase <= 1) {
+      moonTerm = "Waning Crescent";
+    }
+  }
+
+
   return (
-    <div>
+    <div className={styles.container}>
       <h2>Astronomical Information</h2>
       <form onSubmit={handleSubmit}>
         <label>
@@ -85,7 +117,7 @@ function AstronomyInfo() {
         <div>
           <p>Sunrise: {astronomyData.sunrise}</p>
           <p>Sunset: {astronomyData.sunset}</p>
-          <p>Moon Phase: {astronomyData.moonphase}</p>
+          <p>Moon Phase: {moonTerm}</p>
         </div>
       )}
     </div>
