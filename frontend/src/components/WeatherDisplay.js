@@ -30,6 +30,7 @@ const WeatherDisplay = ({ lat, lon }) => {
         <div>
             <h2>Weather in {weather.name}</h2>
             <p>Temperature: {weather.main.temp}°F</p>
+            <p>Feels like: {weather.main.feels_like}°F</p>
             <p>Condition: {weather.weather[0].description}</p>
             <p>Humidity: {weather.main.humidity}%</p>
             <p>Wind Speed: {weather.wind.speed} mph</p>
