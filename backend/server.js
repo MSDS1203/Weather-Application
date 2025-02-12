@@ -16,6 +16,7 @@ app.use(express.json());
 
 // get city recommendations based on search query (city name OR city-name,state-code,country-code)
 // URL: http://localhost:3001/citySearch?q=QUERY (replace QUERY with search query)
+// For calling from frontend, use fetch(`/citySearch?q=${query}`)
 app.get('/citySearch', async (req, res) => {
     const query = req.query.q;
     if (!query) return res.status(400).json({ error: 'Missing search query parameter' });
@@ -31,6 +32,7 @@ app.get('/citySearch', async (req, res) => {
 // get coordinates based on zip code and country code divided by comma 
 // country code is optional, but recommended
 // URL: localhost:3001/zipSearch?q=QUERY (replace QUERY with zip and country code)
+// For calling from frontend, use fetch(`/zipSearch?q=${query}`)
 app.get('/zipSearch', async (req, res) => {
     const query = req.query.q;
     if (!query) return res.status(400).json({ error: 'Missing search query parameter' });
@@ -47,6 +49,7 @@ app.get('/zipSearch', async (req, res) => {
 // URL: localhost:3001/weather?lat=LATITUDE&lon=LONGITUDE&unit=UNIT 
 // (replace LATITUDE and LONGITUDE with coordinates, UNIT with imperial or metric)
 // unit field is optional, default is imperial
+// For calling from frontend, use fetch(`/weather?lat=${lat}&lon=${lon}`) 
 app.get("/weather", async (req, res) => {
     const { lat, lon } = req.query;
     const unit = req.query.unit || 'imperial'; // if unit not in query, default to imperial
