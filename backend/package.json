@@ -5,5 +5,11 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "sqlite3": "^5.0.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "scripts": {
+    "start": "node server.js"
   }
 }

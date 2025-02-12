@@ -12,6 +12,9 @@ app.use(cors());
 const PORT = process.env.PORT || 3001;
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
 
+app.use(cors());
+app.use(express.json());
+
 // get city recommendations based on search query (city name OR city-name,state-code,country-code)
 // URL: http://localhost:3001/citySearch?q=QUERY (replace QUERY with search query)
 app.get('/citySearch', async (req, res) => {
