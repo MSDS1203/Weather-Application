@@ -1,7 +1,9 @@
 const sqlite3 = require("sqlite3").verbose();
 const path = require('path');
+const fs = require('fs');
 
 // Ensure the database path exists
+const dbFolder = path.resolve(__dirname, '../database');
 const dbPath = path.resolve(__dirname, '../database/weather_app.db');
 
 // Initialize SQLite database
@@ -27,5 +29,7 @@ db.serialize(() => {
         )
     `);
 });
+
+
 
 module.exports = db;

@@ -4,6 +4,7 @@ const axios = require('axios');
 const cors = require('cors');
 require('dotenv').config(); 
 const {searchCity, searchZip, getWeatherData} = require('./services/geoSearch');
+const {getCachedWeather, saveWeatherToCache} = require('./services/cache');
 
 const app = express();
 app.use(cors());
@@ -54,10 +55,22 @@ app.get("/weather", async (req, res) => {
     }
 
     try {
+        // Check SQLite Cache First
+        const cachedWeather = await getCachedWeather(lat, lon);
+        if (cachedWeather) {
+            console.log("Serving weather data from cache");
+            return res.json(cachedWeather);
+        }
+
+        console.log("Fetching new weather data from OpenWeatherMap API...");
         const result = await getWeatherData(lat, lon, unit);
-        res.json(result); // Return full API response
+
+        // Save to cache
+        await saveWeatherToCache(lat, lon, result);
+        res.json(result);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("Error fetching weather data:", error);
+        res.status(500).json({ error: "Failed to retrieve weather data" });
     }
 });
 
