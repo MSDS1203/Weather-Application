@@ -1,4 +1,24 @@
-const db = require("./sqliteDB");
+const sqlite3 = require("sqlite3").verbose();
+const path = require("path");
+const fs = require("fs");
+
+// Ensure database folder exists
+const dbFolderPath = path.resolve(__dirname, "../database");
+const dbFilePath = path.join(dbFolderPath, "weather_app.db");
+
+// If the folder doesn't exist, create it
+if (!fs.existsSync(dbFolderPath)) {
+    fs.mkdirSync(dbFolderPath, { recursive: true });
+}
+
+// Initialize SQLite database
+const db = new sqlite3.Database(dbFilePath, (err) => {
+    if (err) {
+        console.error("SQLite Error: Cannot open database", err);
+    } else {
+        console.log("Connected to SQLite database for caching");
+    }
+});
 
 // Function to get cached weather data
 function getCachedWeather(lat, lon) {
