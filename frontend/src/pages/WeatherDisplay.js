@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const WeatherDisplay = ({ lat, lon }) => {
+const WeatherDisplay = ({ lat, lon, location }) => {
     const [weather, setWeather] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -10,7 +10,7 @@ const WeatherDisplay = ({ lat, lon }) => {
             try {
                 const response = await fetch(`/weather?lat=${lat}&lon=${lon}`);
                 if (!response.ok) throw new Error("Failed to fetch weather data");
-                
+
                 const data = await response.json();
                 setWeather(data);
             } catch (err) {
@@ -34,6 +34,9 @@ const WeatherDisplay = ({ lat, lon }) => {
             <p>Condition: {weather.weather[0].description}</p>
             <p>Humidity: {weather.main.humidity}%</p>
             <p>Wind Speed: {weather.wind.speed} mph</p>
+
+            {/* Astronomy data at the bottom */}
+            <weatherInfo location={location} />
         </div>
     );
 };
