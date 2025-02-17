@@ -68,10 +68,17 @@ const WeatherInfo = () => {
             {weather && (
             <div>
                 <h3>Weather in {decodeURIComponent(location)}</h3>
+                <img src ={`http://openweathermap.org/img/w/${weather.weather[0].icon}.png`} alt="wthr img" />
                 <p></p>
                 <p>Temperature: {weather.main.temp}°</p>
                 <p>Humidity: {weather.main.humidity}%</p>
-                {/*Put other information here! */}
+                <p>Wind: {weather.wind.speed} mph</p>
+                <p>Conditions: {weather.weather[0].description}</p>
+                <p>Feels like: {weather.main.feels_like}°</p>
+                <p>High: {weather.main.temp_max}°</p>
+                <p>Low: {weather.main.temp_min}°</p>
+                <p>Pressure: {weather.main.pressure} hPa</p>
+                <p>Visibility: {weather.visibility} miles</p>
             </div>
         )}
             {astronomyData ? (
