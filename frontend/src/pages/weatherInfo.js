@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 
 const API_KEY = "DZQTE9HYT64JDRCBJBZR9DBJ9";
+const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 const WeatherInfo = () => {
     const { location, lat, lon } = useParams();
@@ -11,6 +12,14 @@ const WeatherInfo = () => {
     const [loading, setLoading] = useState(false);
     const [astronomyData, setAstronomyData] = useState(null);
     const [error, setError] = useState(null);
+    const containerStyle = {
+        width: "60%",
+        height: "400px",
+      };      
+
+      const { isLoaded } = useJsApiLoader({
+        googleMapsApiKey: GOOGLE_API_KEY,
+    });
 
     useEffect(() => {
         const fetchAstronomyData = async () => {
@@ -63,11 +72,16 @@ const WeatherInfo = () => {
 
     return (
         
-        <div style={{ position: "fixed", bottom: 0, width: "100%", backgroundColor: "#282c34", color: "white", padding: "10px", textAlign: "center" }}>
+        <div /*style={{ position: "fixed", bottom: 0, width: "100%", backgroundColor: "#282c34", color: "white", padding: "10px", textAlign: "center" }}*/>
             {loading && <p>Loading...</p>}
             {weather && (
             <div>
                 <h3>Weather in {decodeURIComponent(location)}</h3>
+                {isLoaded && (
+                        <GoogleMap mapContainerStyle={containerStyle} center={{ lat: parseFloat(lat), lng: parseFloat(lon) }} zoom={12}>
+                            <Marker position={{ lat: parseFloat(lat), lng: parseFloat(lon) }} />
+                        </GoogleMap>
+                    )}
                 <img src ={`http://openweathermap.org/img/w/${weather.weather[0].icon}.png`} alt="wthr img" />
                 <p></p>
                 <p>Temperature: {weather.main.temp}°</p>
