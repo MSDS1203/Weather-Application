@@ -20,13 +20,6 @@ const Navbar = () => {
                         Saved Locations
                     </NavLink>
 
-                    <NavLink to ="/MapComponent" style={({ isActive }) => ({
-                        fontWeight: isActive ? "bold" : "normal",
-                        color: isActive ? "blue" : "black",
-                    })}>
-                        Map Component
-                    </NavLink>
-
                     <NavLink to ="/search" style={({ isActive }) => ({
                         fontWeight: isActive ? "bold" : "normal",
                         color: isActive ? "blue" : "black",
