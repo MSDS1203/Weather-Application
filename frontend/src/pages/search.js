@@ -4,8 +4,6 @@ import axios from "axios";
 import styles from "../App.module.css";
 
 
-/**Weather-Application\frontend\src\pages\search.js*/
-
 const Search = () => {
     const [query, setQuery] = useState(""); // Combined query state
     const [results, setResults] = useState([]); // Combined results state
