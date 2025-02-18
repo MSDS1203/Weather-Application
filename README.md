@@ -13,5 +13,5 @@
 * Create a .env file with your Google Maps api key: REACT_APP_GOOGLE_MAPS_API_KEY='ADD API KEY HERE'
 
 ## Execution
-* From backend folder,  start the server: node server.js
-* Navigate to frontend folder and start the React app: npm start
+* Navigate to root directory and start the React app: npm start
+* The back end servers and front end project should run at the same time
