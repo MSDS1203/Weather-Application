@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import styles from "./WeatherDisplay.module.css"; 
 
 const API_KEY = "DZQTE9HYT64JDRCBJBZR9DBJ9";
 const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
@@ -71,38 +72,48 @@ const WeatherInfo = () => {
     if (error) return <p>Error: {error}</p>;
 
     return (
-        
-        <div /*style={{ position: "fixed", bottom: 0, width: "100%", backgroundColor: "#282c34", color: "white", padding: "10px", textAlign: "center" }}*/>
+        <div className={styles.container}>
             {loading && <p>Loading...</p>}
             {weather && (
-            <div>
-                <h3>Weather in {decodeURIComponent(location)}</h3>
-                {isLoaded && (
-                        <GoogleMap mapContainerStyle={containerStyle} center={{ lat: parseFloat(lat), lng: parseFloat(lon) }} zoom={12}>
-                            <Marker position={{ lat: parseFloat(lat), lng: parseFloat(lon) }} />
-                        </GoogleMap>
+                <div>
+                    <h3>Weather in {decodeURIComponent(location)}</h3>
+                    
+                    {isLoaded && (
+                        <div className={styles.mapContainer}>
+                            <GoogleMap 
+                                mapContainerStyle={containerStyle} 
+                                center={{ lat: parseFloat(lat), lng: parseFloat(lon) }} 
+                                zoom={12}
+                            >
+                                <Marker position={{ lat: parseFloat(lat), lng: parseFloat(lon) }} />
+                            </GoogleMap>
+                        </div>
                     )}
-                <img src ={`http://openweathermap.org/img/w/${weather.weather[0].icon}.png`} alt="wthr img" />
-                <p></p>
-                <p>Temperature: {weather.main.temp}°</p>
-                <p>Humidity: {weather.main.humidity}%</p>
-                <p>Wind: {weather.wind.speed} mph</p>
-                <p>Conditions: {weather.weather[0].description}</p>
-                <p>Feels like: {weather.main.feels_like}°</p>
-                <p>High: {weather.main.temp_max}°</p>
-                <p>Low: {weather.main.temp_min}°</p>
-                <p>Pressure: {weather.main.pressure} hPa</p>
-                <p>Visibility: {weather.visibility} miles</p>
-            </div>
-        )}
+
+                    <img 
+                        src={`http://openweathermap.org/img/w/${weather.weather[0].icon}.png`} 
+                        alt="wthr img" 
+                        style={{ width: "100px", height: "100px" }} 
+                    />
+                    <p>Temperature: {weather.main.temp}°</p>
+                    <p>Humidity: {weather.main.humidity}%</p>
+                    <p>Wind: {weather.wind.speed} mph</p>
+                    <p>Conditions: {weather.weather[0].description}</p>
+                    <p>Feels like: {weather.main.feels_like}°</p>
+                    <p>High: {weather.main.temp_max}°</p>
+                    <p>Low: {weather.main.temp_min}°</p>
+                    <p>Pressure: {weather.main.pressure} hPa</p>
+                    <p>Visibility: {weather.visibility} miles</p>
+                </div>
+            )}
+            
             {astronomyData ? (
-                <>
-                    <p>Sunrise: {astronomyData.sunrise} | Sunset: {astronomyData.sunset} | Moon Phase: {getMoonPhase(astronomyData.moonphase)}</p>
-                </>
+                <p>Sunrise: {astronomyData.sunrise} | Sunset: {astronomyData.sunset} | Moon Phase: {getMoonPhase(astronomyData.moonphase)}</p>
             ) : (
                 <p>Loading astronomy data...</p>
             )}
         </div>
+
     );
 };
 
