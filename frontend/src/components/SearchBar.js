@@ -18,8 +18,7 @@ const SearchBar = ({ onSelect }) => {
             }
         },
         options: {
-            types: ['geocode'], // Suggests only cities
-            componentRestrictions: { country: "us" }, // Limit search to the US (optional)
+            types: ['geocode'], // Suggests cities, states, zip codes, addresses, etc.
         },
     });
 
@@ -28,7 +27,7 @@ const SearchBar = ({ onSelect }) => {
             <input
                 ref={ref}
                 type="text"
-                placeholder="Search for a city..."
+                placeholder="Search for a location..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
             />
