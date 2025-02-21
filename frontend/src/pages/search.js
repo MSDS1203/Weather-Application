@@ -17,7 +17,7 @@ const Search = () => {
     };
 
     return (
-        <div>
+        <div className={styles.container}>
             <h2>Weather App</h2>
 
             <SearchBar onSelect={handleSelectLocation} /> {/* Pass handleSelectLocation to SearchBar */}
