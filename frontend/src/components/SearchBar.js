@@ -18,7 +18,7 @@ const SearchBar = ({ onSelect }) => {
             }
         },
         options: {
-            types: ['(cities)'], // Suggests only cities
+            types: ['geocode'], // Suggests only cities
             componentRestrictions: { country: "us" }, // Limit search to the US (optional)
         },
     });
