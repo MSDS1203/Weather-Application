@@ -6,7 +6,7 @@
 .pnp.js
 
 # environment (API key, sensitive information)
-.env*
+.env
 
 # testing
 /coverage
