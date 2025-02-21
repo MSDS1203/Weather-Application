@@ -9,7 +9,7 @@ const SearchBar = ({ onSelect }) => {
         onPlaceSelected: (place) => {
             if (place.geometry) {
                 const locationData = {
-                    name: place.name,
+                    name: place.formatted_address,
                     lat: place.geometry.location.lat(),
                     lon: place.geometry.location.lng(),
                 };
