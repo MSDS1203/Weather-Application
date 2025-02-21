@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import styles from "./WeatherDisplay.module.css"; 
+
 
 const WeatherDisplay = ({ lat, lon, location }) => {
     const [weather, setWeather] = useState(null);
@@ -27,7 +29,7 @@ const WeatherDisplay = ({ lat, lon, location }) => {
     if (error) return <p>Error: {error}</p>;
 
     return (
-        <div>
+        <div className={styles.container}>
             <h2>Weather in {weather.name}</h2>
             <p>Temperature: {weather.main.temp}°F</p>
             <p>Feels like: {weather.main.feels_like}°F</p>

@@ -1,13 +1,8 @@
 /* Ensure the html and body take the full height */
 html, body {
-    height: 100%;
-    margin: 0; /* Remove default margins */
-  }
-  
-  /* Ensure the html and body take the full height */
-/*html, body {
   height: 100%;
-  margin: 0;  /* Remove default margins */
+  margin: 0; /* Remove default margins */
+}
 
 /* Your container styling */
 .container {
@@ -16,46 +11,26 @@ html, body {
   color: #331E36;
   font-size: 20px;
   padding: 40px;
-  background-color: #C2EFEB;
+  background-color: rgb(211, 248, 255);
   display: flex;
   flex-direction: column;
   justify-content: flex-start; /* Align content at the top */
   min-height: 100vh; /* Ensure the container takes up at least the full viewport height */
+  align-items: center; /* Center horizontally */
 }
 
-/* Optional: If you want to ensure content is spaced well and centered vertically */
-.container {
+/* Container for input and button */
+.inputContainer {
   display: flex;
-  flex-direction: column;
-  justify-content: center; /* Center vertically */
-  align-items: center;     /* Center horizontally */
+  flex-direction: row; /* Align items horizontally */
+  align-items: center; /* Center items vertically */
+  gap: 10px; /* Space between input and button */
+  width: 100%;
+  max-width: 400px; /* Match the input width */
+  margin-bottom: 20px; /* Space below the input container */
 }
 
-  
-  /* Button styling */
-  .button {
-    padding: 12px 20px;  /* Increase padding to make it larger */
-    font-size: 18px;     /* Increase the font size */
-    border: none;
-    border-radius: 5px;  /* Match the border radius of input */
-    background-color: #62c4d7; /* You can use the same color as the input */
-    color: rgb(6, 10, 30);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .button:hover {
-    background-color: #41337A; /* Darker color when hovering */
-  }
-
-  /* Navbar styling */
-  .navbar {
-    background-color: #333;
-    color: white;
-    padding: 10px;
-  }
-
-  /* Input field styling */
+/* Input field styling */
 input {
   background-color: #5ad8d6;
   color: black;
@@ -64,12 +39,54 @@ input {
   font-size: 18px;     /* Increase font size */
   border-radius: 5px;  /* Match the border radius of the button */
   width: 100%;         /* Make the input field take up full width */
-  max-width: 400px;    /* Optional: Set a maximum width */
-  margin-bottom: 20px; /* Space between input and button */
+  height: 48px;        /* Set a fixed height to match the button */
+  box-sizing: border-box; /* Ensure padding is included in height */
 }
 
 input:focus {
   background-color: lightcyan;
   outline: none;
   border: 1px solid blue;
+}
+
+/* Button styling */
+.button {
+  padding: 12px 20px;  /* Increase padding to make it larger */
+  font-size: 18px;     /* Increase the font size */
+  border: none;
+  border-radius: 5px;  /* Match the border radius of input */
+  background-color: #62c4d7; /* You can use the same color as the input */
+  color: rgb(6, 10, 30);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  height: 48px;        /* Set a fixed height to match the input */
+  box-sizing: border-box; /* Ensure padding is included in height */
+}
+
+.button:hover {
+  background-color: #41337A; /* Darker color when hovering */
+}
+
+/* Results list styling */
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: 400px; /* Match the input width */
+}
+
+li {
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading text styling */
+.loading {
+  font-size: 18px;
+  color: #331E36;
+  margin-top: 20px;
 }
