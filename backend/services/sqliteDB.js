@@ -15,7 +15,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
 // Create table for caching geolocation data
 db.serialize(() => {
     db.run(`
-        CREATE TABLE IF NOT EXISTS geolocation_cache (
+        CREATE TABLE IF NOT EXISTS geolocation (
             location TEXT PRIMARY KEY,
             lat REAL,
             lon REAL

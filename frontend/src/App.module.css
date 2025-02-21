@@ -1,0 +1,75 @@
+/* Ensure the html and body take the full height */
+html, body {
+    height: 100%;
+    margin: 0; /* Remove default margins */
+  }
+  
+  /* Ensure the html and body take the full height */
+/*html, body {
+  height: 100%;
+  margin: 0;  /* Remove default margins */
+
+/* Your container styling */
+.container {
+  text-align: center;
+  height: 100%; /* Make sure the container takes full height */
+  color: #331E36;
+  font-size: 20px;
+  padding: 40px;
+  background-color: #C2EFEB;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align content at the top */
+  min-height: 100vh; /* Ensure the container takes up at least the full viewport height */
+}
+
+/* Optional: If you want to ensure content is spaced well and centered vertically */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center vertically */
+  align-items: center;     /* Center horizontally */
+}
+
+  
+  /* Button styling */
+  .button {
+    padding: 12px 20px;  /* Increase padding to make it larger */
+    font-size: 18px;     /* Increase the font size */
+    border: none;
+    border-radius: 5px;  /* Match the border radius of input */
+    background-color: #62c4d7; /* You can use the same color as the input */
+    color: rgb(6, 10, 30);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .button:hover {
+    background-color: #41337A; /* Darker color when hovering */
+  }
+
+  /* Navbar styling */
+  .navbar {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+  }
+
+  /* Input field styling */
+input {
+  background-color: #5ad8d6;
+  color: black;
+  border: 1px solid #41337A;
+  padding: 12px 20px;  /* Increase padding to make the input larger */
+  font-size: 18px;     /* Increase font size */
+  border-radius: 5px;  /* Match the border radius of the button */
+  width: 100%;         /* Make the input field take up full width */
+  max-width: 400px;    /* Optional: Set a maximum width */
+  margin-bottom: 20px; /* Space between input and button */
+}
+
+input:focus {
+  background-color: lightcyan;
+  outline: none;
+  border: 1px solid blue;
+}

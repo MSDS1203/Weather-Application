@@ -3,11 +3,11 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-      "start": "concurrently \"npm run server\" \"npm run client\"",
-      "server": "cd backend && node server.js",
-      "client": "cd frontend && npm start"
+        "start": "concurrently \"npm run server\" \"npm run client\"",
+        "server": "cd backend && node server.js",
+        "client": "cd frontend && npm start"
     },
     "devDependencies": {
-      "concurrently": "^9.1.2"
+        "concurrently": "^9.1.2"
     }
-  }
+}
