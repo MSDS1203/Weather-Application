@@ -12,7 +12,9 @@
 * Run "npm install"  in terminal to install dependencies from package.json file.
 * Create a .env file with your Google Maps api key: REACT_APP_GOOGLE_MAPS_API_KEY='ADD API KEY HERE' and your Visual Crossing API key: REACT_APP_VISUAL_CROSSING_API_KEY='ADD API KEY HERE'
 
-## Execution
+### Root
 * Navigate to root directory and do npm install
-* Start the React app: npm start
+
+## Execution
+* Go to the root directory and start the React app: npm start
 * The back end servers and front end project should run at the same time
