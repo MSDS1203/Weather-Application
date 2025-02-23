@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import styles from "./WeatherDisplay.module.css"; 
@@ -46,12 +45,16 @@ const WeatherInfo = () => {
         const getWeather = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`http://localhost:3001/weather?lat=${lat}&lon=${lon}&unit=imperial`);
-                setWeather(response.data);
-            } catch (error) {
-                console.error("Error fetching weather data:", error);
+                const response = await fetch(`/weather?lat=${lat}&lon=${lon}`);
+                if (!response.ok) throw new Error("Failed to fetch weather data");
+
+                const data = await response.json();
+                setWeather(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         };
 
         getWeather();
