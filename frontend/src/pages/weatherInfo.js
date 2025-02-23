@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import styles from "./WeatherDisplay.module.css"; 
 
-const API_KEY = "DZQTE9HYT64JDRCBJBZR9DBJ9";
+const VC_API_KEY = process.env.REACT_APP_VISUAL_CROSSING_API_KEY;
 const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 const WeatherInfo = () => {
@@ -24,7 +24,7 @@ const WeatherInfo = () => {
     useEffect(() => {
         const fetchAstronomyData = async () => {
             try {
-                const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/today?key=${API_KEY}`);
+                const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/today?key=${VC_API_KEY}`);
                 const data = await response.json();
 
                 if (!data.days || data.days.length === 0) {
