@@ -32,7 +32,8 @@ const WeatherInfo = () => {
                 }
 
                 const { sunrise, sunset, moonphase } = data.days[0];
-                setAstronomyData({ sunrise, sunset, moonphase });
+                const uvIndex = data.currentConditions.uvindex;
+                setAstronomyData({ sunrise, sunset, moonphase, uvIndex });
             } catch (err) {
                 setError(err.message);
             }
@@ -111,7 +112,10 @@ const WeatherInfo = () => {
             )}
             
             {astronomyData ? (
-                <p>Sunrise: {astronomyData.sunrise} | Sunset: {astronomyData.sunset} | Moon Phase: {getMoonPhase(astronomyData.moonphase)}</p>
+                <div>
+                    <p>UV Index: {astronomyData.uvIndex}</p>
+                    <p>Sunrise: {astronomyData.sunrise} | Sunset: {astronomyData.sunset} | Moon Phase: {getMoonPhase(astronomyData.moonphase)}</p>
+                </div>
             ) : (
                 <p>Loading astronomy data...</p>
             )}
