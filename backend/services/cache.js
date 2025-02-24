@@ -80,4 +80,33 @@ function saveForecastToCache(lat, lon, type, data) {
     });
 }
 
+// Function to get cached astronomy data
+function getCachedAstronomy(location) {
+    return new Promise((resolve, reject) => {
+        db.get("SELECT data, timestamp FROM astronomy_cache WHERE location = ?", [location], (err, row) => {
+            if (err) reject(err);
+            else if (row && Date.now() - row.timestamp < 24 * 60 * 60 * 1000) { // 24-hour expiration
+                console.log("Serving astronomy data from SQLite cache");
+                resolve(JSON.parse(row.data));
+            } else {
+                resolve(null);
+            }
+        });
+    });
+}
+
+// Function to save astronomy data to cache
+function saveAstronomyToCache(location, data) {
+    return new Promise((resolve, reject) => {
+        db.run(
+            "INSERT OR REPLACE INTO astronomy_cache (location, data, timestamp) VALUES (?, ?, ?)",
+            [location, JSON.stringify(data), Date.now()],
+            (err) => {
+                if (err) reject(err);
+                else resolve();
+            }
+        );
+    });
+}
+
 module.exports = { getCachedWeather, saveWeatherToCache, getCachedForecast, saveForecastToCache };
