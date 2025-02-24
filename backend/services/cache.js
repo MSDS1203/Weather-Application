@@ -39,7 +39,7 @@ function getCachedWeather(lat, lon) {
 function saveWeatherToCache(lat, lon, data) {
     return new Promise((resolve, reject) => {
         db.run(
-            "INSERT OR REPLACE INTO weather_cache (location, data, timestamp) VALUES (?, ?, ?)", 
+            "INSERT OR REPLACE INTO weather_cache (location, data, timestamp) VALUES (?, ?, ?)",
             [`${lat},${lon}`, JSON.stringify(data), Date.now()],
             (err) => {
                 if (err) reject(err);
@@ -49,4 +49,35 @@ function saveWeatherToCache(lat, lon, data) {
     });
 }
 
-module.exports = { getCachedWeather, saveWeatherToCache };
+// Get cached weather forecast (hourly/daily)
+function getCachedForecast(lat, lon, type) {
+    return new Promise((resolve, reject) => {
+        db.get("SELECT data, timestamp FROM forecast_cache WHERE location = ? AND type = ?",
+            [`${lat},${lon}`, type],
+            (err, row) => {
+                if (err) reject(err);
+                else if (row && Date.now() - row.timestamp < 3 * 60 * 60 * 1000) { // 3-hour expiration
+                    console.log(`Serving ${type} forecast from SQLite cache`);
+                    resolve(JSON.parse(row.data));
+                } else {
+                    resolve(null);
+                }
+            });
+    });
+}
+
+// Save weather forecast (hourly/daily) to cache
+function saveForecastToCache(lat, lon, type, data) {
+    return new Promise((resolve, reject) => {
+        db.run(
+            "INSERT OR REPLACE INTO forecast_cache (location, type, data, timestamp) VALUES (?, ?, ?, ?)",
+            [`${lat},${lon}`, type, JSON.stringify(data), Date.now()],
+            (err) => {
+                if (err) reject(err);
+                else resolve();
+            }
+        );
+    });
+}
+
+module.exports = { getCachedWeather, saveWeatherToCache, getCachedForecast, saveForecastToCache };

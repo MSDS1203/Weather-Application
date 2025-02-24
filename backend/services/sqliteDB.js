@@ -28,6 +28,15 @@ db.serialize(() => {
             timestamp INTEGER
         )
     `);
+    db.run(`
+        CREATE TABLE IF NOT EXISTS forecast_cache (
+            location TEXT,
+            type TEXT,
+            data TEXT,
+            timestamp INTEGER,
+            PRIMARY KEY (location, type)
+        )
+    `);
 });
 
 

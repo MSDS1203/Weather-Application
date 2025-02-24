@@ -6,10 +6,11 @@ const db = require('./sqliteDB');
 async function searchCity(query) {
     try {
         const response = await axios.get(`http://api.openweathermap.org/geo/1.0/direct`, {
-            params: { 
+            params: {
                 q: query, // user-provided search (city name, zip code, etc.)
                 limit: 5, // limit to 5 recommendations
-                appid: OPENWEATHER_API_KEY }
+                appid: OPENWEATHER_API_KEY
+            }
         });
         // format cities as: "city, state, country" (ex. "Greenville, North Carolina, US")
         const cities = response.data.map(city => ({
@@ -24,7 +25,7 @@ async function searchCity(query) {
         }
 
         return cities;
-        
+
     } catch (error) {
         console.error('Error fetching city data:', error);
         throw new Error('Failed to fetch city data');
@@ -35,7 +36,7 @@ async function searchCity(query) {
 async function searchZip(query) {
     try {
         const response = await axios.get(`http://api.openweathermap.org/geo/1.0/zip`, {
-            params: { 
+            params: {
                 zip: query,
                 appid: OPENWEATHER_API_KEY
             }
@@ -64,11 +65,12 @@ async function searchZip(query) {
 async function getWeatherData(lat, lon, unit) {
     try {
         const response = await axios.get(`http://api.openweathermap.org/data/2.5/weather`, {
-            params: { 
-                lat, 
+            params: {
+                lat,
                 lon,
                 appid: OPENWEATHER_API_KEY,
-                units: unit }
+                units: unit
+            }
         });
 
         return response.data;
@@ -78,12 +80,51 @@ async function getWeatherData(lat, lon, unit) {
     }
 }
 
+// Get Hourly Forecast for up to the next 4 days
+async function getHourlyForecast(lat, lon, unit) {
+    try {
+        const response = await axios.get(`http://api.openweathermap.org/data/2.5/forecast/hourly`, {
+            params: {
+                lat,
+                lon,
+                appid: OPENWEATHER_API_KEY,
+                cnt: 96 // Can be changed to a number between 24 (1 day) up to 96 (4 days)
+            }
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching hourly forecast:', error);
+        throw new Error('Failed to fetch hourly forecast');
+    }
+}
+
+// Get Daily Forecast for up to the next 16 days
+async function getDailyForecast(lat, lon, unit) {
+    try {
+        const response = await axios.get(`http://api.openweathermap.org/data/2.5/daily`, {
+            params: {
+                lat,
+                lon,
+                appid: OPENWEATHER_API_KEY,
+                units: unit,
+                cnt: 16 // Number of days. Can be changed to a number bewteen 1 and 16
+            }
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching daily forecast:', error);
+        throw new Error('Failed to fetch daily forecast');
+    }
+}
+
 // Function to save geolocation data in SQLite
 function saveGeolocation(location, lat, lon) {
     return new Promise((resolve, reject) => {
-        db.run("INSERT OR REPLACE INTO geolocation (location, lat, lon) VALUES (?, ?, ?)", 
-            [location, lat, lon], 
-            function(err) {
+        db.run("INSERT OR REPLACE INTO geolocation (location, lat, lon) VALUES (?, ?, ?)",
+            [location, lat, lon],
+            function (err) {
                 if (err) reject(err);
                 else resolve();
             }
@@ -104,7 +145,7 @@ function getGeolocation(location) {
 // Function to delete stored geolocation data
 function deleteGeolocation(location) {
     return new Promise((resolve, reject) => {
-        db.run("DELETE FROM geolocation WHERE location = ?", [location], function(err) {
+        db.run("DELETE FROM geolocation WHERE location = ?", [location], function (err) {
             if (err) reject(err);
             else resolve(this.changes > 0);
         });
