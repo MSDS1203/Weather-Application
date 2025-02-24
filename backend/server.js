@@ -2,9 +2,9 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
-require('dotenv').config(); 
-const {searchCity, searchZip, getWeatherData} = require('./services/geoSearch');
-const {getCachedWeather, saveWeatherToCache} = require('./services/cache');
+require('dotenv').config();
+const { searchCity, searchZip, getWeatherData } = require('./services/geoSearch');
+const { getCachedWeather, saveWeatherToCache } = require('./services/cache');
 
 const app = express();
 app.use(cors());
@@ -74,6 +74,45 @@ app.get("/weather", async (req, res) => {
     } catch (error) {
         console.error("Error fetching weather data:", error);
         res.status(500).json({ error: "Failed to retrieve weather data" });
+    }
+});
+// Route to get hourly forecast
+// URL: localhost:3001/hourlyForecast?lat=LATITUDE&lon=LONGITUDE
+app.get("/hourlyForecast", async (req, res) => {
+    const { lat, lon } = req.query;
+    if (!lat || !lon) return res.status(400).json({ error: "Latitude and Longitude are required" });
+
+    try {
+        // Check cache first
+        const cachedForecast = await getCachedForecast(lat, lon, "hourly");
+        if (cachedForecast) return res.json(cachedForecast);
+
+        // Fetch new data from API
+        const forecast = await getHourlyForecast(lat, lon);
+        await saveForecastToCache(lat, lon, "hourly", forecast);
+        res.json(forecast);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Route to get daily forecast
+// URL: localhost:3001/dailyForecast?lat=LATITUDE&lon=LONGITUDE&days=7
+app.get("/dailyForecast", async (req, res) => {
+    const { lat, lon, days = 7 } = req.query;
+    if (!lat || !lon) return res.status(400).json({ error: "Latitude and Longitude are required" });
+
+    try {
+        // Check cache first
+        const cachedForecast = await getCachedForecast(lat, lon, "daily");
+        if (cachedForecast) return res.json(cachedForecast);
+
+        // Fetch new data from API
+        const forecast = await getDailyForecast(lat, lon, "imperial", days);
+        await saveForecastToCache(lat, lon, "daily", forecast);
+        res.json(forecast);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 });
 
