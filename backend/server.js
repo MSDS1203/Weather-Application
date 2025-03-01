@@ -45,6 +45,31 @@ app.get('/zipSearch', async (req, res) => {
     }
 });
 
+// get location name based on coordinates
+// URL: localhost:3001/geocode/reverse?lat=LATITUDE&lon=LONGITUDE
+// For calling from frontend, use fetch(`/geocode/reverse?lat=${lat}&lon=${lon}`)
+app.get('/geocode/reverse', async (req, res) => {
+    const lat = req.query.lat;
+    const lon = req.query.lon;
+
+    if (!lat || !lon) return res.status(400).json({ error: 'Missing latitude and/or longitude parameters' });
+
+    try {
+        const result = await axios.get(`http://api.openweathermap.org/geo/1.0/reverse`, {
+            params: {
+                lat,
+                lon,
+                limit: 1,
+                appid: OPENWEATHER_API_KEY
+            }
+        });
+        const {location, state, country} = result.data[0];
+        res.json({ location, state, country });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Route to get weather by coordinates
 // URL: localhost:3001/weather?lat=LATITUDE&lon=LONGITUDE&unit=UNIT 
 // (replace LATITUDE and LONGITUDE with coordinates, UNIT with imperial or metric)

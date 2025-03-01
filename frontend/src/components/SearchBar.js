@@ -36,11 +36,15 @@ const SearchBar = ({ onSelect }) => {
                 const { latitude, longitude } = position.coords;
 
                 try {
-                    // Need to add reverse geocoding to get location name from lat/lon
-                    
+                    const response = await fetch(`/geocode/reverse?lat=${latitude}&lon=${longitude}`)
+                    const data = await response.json();
+                    const { location, state, country } = data;
+
+                    // filter out empty fields
+                    const formattedName = [location, state, country].filter(Boolean).join(', ');
 
                     const locationData = {
-                        name: "Current Location", 
+                        name: formattedName || "Current Location", 
                         lat: latitude,
                         lon: longitude,
                     }
