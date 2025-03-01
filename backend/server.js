@@ -4,7 +4,9 @@ const axios = require('axios');
 const cors = require('cors');
 require('dotenv').config();
 const { searchCity, searchZip, getWeatherData } = require('./services/geoSearch');
-const { getCachedWeather, saveWeatherToCache } = require('./services/cache');
+const { getCachedWeather, saveWeatherToCache, getCachedForecast, saveForecastToCache  } = require('./services/cache');
+const { getHourlyForecast, getDailyForecast} = require('./services/geoSearch');
+
 
 const app = express();
 app.use(cors());
@@ -77,9 +79,9 @@ app.get("/weather", async (req, res) => {
     }
 });
 // Route to get hourly forecast
-// URL: localhost:3001/hourlyForecast?lat=LATITUDE&lon=LONGITUDE
-app.get("/hourlyForecast", async (req, res) => {
-    const { lat, lon } = req.query;
+// URL: localhost:3001/forecast/hourly?lat=LATITUDE&lon=LONGITUDE
+app.get("/forecast/hourly", async (req, res) => {
+    const { lat, lon, unit, cnt} = req.query;
     if (!lat || !lon) return res.status(400).json({ error: "Latitude and Longitude are required" });
 
     try {
@@ -88,7 +90,7 @@ app.get("/hourlyForecast", async (req, res) => {
         if (cachedForecast) return res.json(cachedForecast);
 
         // Fetch new data from API
-        const forecast = await getHourlyForecast(lat, lon);
+        const forecast = await getHourlyForecast(lat, lon, unit, cnt);
         await saveForecastToCache(lat, lon, "hourly", forecast);
         res.json(forecast);
     } catch (error) {
@@ -97,9 +99,10 @@ app.get("/hourlyForecast", async (req, res) => {
 });
 
 // Route to get daily forecast
-// URL: localhost:3001/dailyForecast?lat=LATITUDE&lon=LONGITUDE&days=7
-app.get("/dailyForecast", async (req, res) => {
-    const { lat, lon, days = 7 } = req.query;
+// URL: localhost:3001/forecast/daily?lat=LATITUDE&lon=LONGITUDE&cnt=7&appid=API_KEY
+app.get("/forecast/daily", async (req, res) => {
+    
+    const { lat, lon, cnt = 7, unit = "imperial"} = req.query;
     if (!lat || !lon) return res.status(400).json({ error: "Latitude and Longitude are required" });
 
     try {
@@ -108,7 +111,7 @@ app.get("/dailyForecast", async (req, res) => {
         if (cachedForecast) return res.json(cachedForecast);
 
         // Fetch new data from API
-        const forecast = await getDailyForecast(lat, lon, "imperial", days);
+        const forecast = await getDailyForecast(lat, lon, cnt, unit);
         await saveForecastToCache(lat, lon, "daily", forecast);
         res.json(forecast);
     } catch (error) {
