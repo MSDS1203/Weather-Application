@@ -152,4 +152,4 @@ function deleteGeolocation(location) {
     });
 }
 
-module.exports = { searchCity, searchZip, getWeatherData };
+module.exports = { searchCity, searchZip, getWeatherData, saveGeolocation };

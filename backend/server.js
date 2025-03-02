@@ -3,7 +3,7 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 require('dotenv').config();
-const { searchCity, searchZip, getWeatherData } = require('./services/geoSearch');
+const { searchCity, searchZip, getWeatherData, saveGeolocation } = require('./services/geoSearch');
 const { getCachedWeather, saveWeatherToCache } = require('./services/cache');
 
 const app = express();
@@ -113,6 +113,17 @@ app.get("/dailyForecast", async (req, res) => {
         res.json(forecast);
     } catch (error) {
         res.status(500).json({ error: error.message });
+    }
+});
+
+app.use(express.json());
+app.post('/save-location', async (req, res) => {
+    const { location, lat, lon } = req.body;
+    try {
+        saveGeolocation(location, lat, lon);
+        res.status(200).send('Location saved successfully');
+    } catch (error) {
+        res.status(500).send('Error saving location');
     }
 });
 
