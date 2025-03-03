@@ -18,11 +18,11 @@ const Search = () => {
 
     return (
         <div>
-            <div className="buttonContainer">
+            <div>
                 <Link to="/saved"><button style={{
                     position: 'absolute',
                     top: '23%',
-                    right: '1%',
+                    right: '21%',
                     padding: '10px',
                     width: '210px'
                 }}
@@ -30,7 +30,7 @@ const Search = () => {
                 <button style={{
                     position: 'absolute',
                     top: '28%',
-                    right: '1%',
+                    right: '21%',
                     padding: '10px',
                     width: '210px'
                 }}
