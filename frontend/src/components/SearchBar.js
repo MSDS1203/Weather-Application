@@ -38,10 +38,10 @@ const SearchBar = ({ onSelect }) => {
                 try {
                     const response = await fetch(`/geocode/reverse?lat=${latitude}&lon=${longitude}`)
                     const data = await response.json();
-                    const { location, state, country } = data;
+                    const { name, state, country } = data;
 
                     // filter out empty fields
-                    const formattedName = [location, state, country].filter(Boolean).join(', ');
+                    const formattedName = [name, state, country].filter(Boolean).join(', ');
 
                     const locationData = {
                         name: formattedName || "Current Location", 

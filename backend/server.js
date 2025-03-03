@@ -63,8 +63,8 @@ app.get('/geocode/reverse', async (req, res) => {
                 appid: OPENWEATHER_API_KEY
             }
         });
-        const {location, state, country} = result.data[0];
-        res.json({ location, state, country });
+        const {name, state, country} = result.data[0];
+        res.json({ name, state, country });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
