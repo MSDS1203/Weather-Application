@@ -27,7 +27,7 @@ const SearchBar = ({ onSelect }) => {
             <input
                 ref={ref}
                 type="text"
-                placeholder="Search for a location..."
+                placeholder="City, Zip Code, etc."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
             />
