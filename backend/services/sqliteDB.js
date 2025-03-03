@@ -37,6 +37,13 @@ db.serialize(() => {
             PRIMARY KEY (location, type)
         )
     `);
+    db.run(`
+        CREATE TABLE IF NOT EXISTS astronomy_cache (
+            location TEXT PRIMARY KEY,
+            data TEXT,
+            timestamp INTEGER
+        )
+    `);
 });
 
 
