@@ -2,6 +2,7 @@ const axios = require('axios');
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
 const db = require('./sqliteDB');
 
+
 // get city recommendations based on search query
 async function searchCity(query) {
     try {
@@ -19,18 +20,22 @@ async function searchCity(query) {
             longitude: city.lon
         }));
 
+
         // Store each result in SQLite
         for (const city of cities) {
             await saveGeolocation(city.location, city.latitude, city.longitude);
         }
 
+
         return cities;
+
 
     } catch (error) {
         console.error('Error fetching city data:', error);
         throw new Error('Failed to fetch city data');
     }
 }
+
 
 // get coordinates based on zip code and country code
 async function searchZip(query) {
@@ -42,7 +47,9 @@ async function searchZip(query) {
             }
         });
 
+
         const { name, country, lat, lon } = response.data;
+
 
         // format response
         const locationData = {
@@ -51,8 +58,10 @@ async function searchZip(query) {
             longitude: lon
         };
 
+
         // Store the geolocation in SQLite
         await saveGeolocation(locationData.location, locationData.latitude, locationData.longitude);
+
 
         return locationData;
     } catch (error) {
@@ -60,6 +69,7 @@ async function searchZip(query) {
         throw new Error("Failed to fetch coordinates.");
     }
 }
+
 
 // get weather data based on latitude and longitude
 async function getWeatherData(lat, lon, unit) {
@@ -73,6 +83,7 @@ async function getWeatherData(lat, lon, unit) {
             }
         });
 
+
         return response.data;
     } catch (error) {
         console.error('Error fetching weather data:', error);
@@ -80,18 +91,50 @@ async function getWeatherData(lat, lon, unit) {
     }
 }
 
+
+// get astronomy data based on location
+// Function to fetch astronomy data based on location
+async function getAstronomyData(location, apiKey) {
+    try {
+        const response = await axios.get(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/today`, {
+            params: {
+                key: apiKey
+            }
+        });
+
+
+        const data = response.data;
+
+
+        if (!data.days || data.days.length === 0) {
+            throw new Error("No astronomical data found.");
+        }
+
+
+        const { sunrise, sunset, moonphase } = data.days[0];
+        const uvIndex = data.currentConditions.uvindex;
+
+
+        return { sunrise, sunset, moonphase, uvIndex };
+    } catch (error) {
+        console.error('Error fetching astronomy data:', error);
+        throw new Error('Failed to fetch astronomy data');
+    }
+}
+
+
 // Get Hourly Forecast for up to the next 4 days
-async function getHourlyForecast(lat, lon, unit = 'imperial', cnt = 96) {
+async function getHourlyForecast(lat, lon, unit) {
     try {
         const response = await axios.get(`http://api.openweathermap.org/data/2.5/forecast/hourly`, {
             params: {
                 lat,
                 lon,
                 appid: OPENWEATHER_API_KEY,
-                unit,
                 cnt: 96 // Can be changed to a number between 24 (1 day) up to 96 (4 days)
             }
         });
+
 
         return response.data;
     } catch (error) {
@@ -100,10 +143,11 @@ async function getHourlyForecast(lat, lon, unit = 'imperial', cnt = 96) {
     }
 }
 
+
 // Get Daily Forecast for up to the next 16 days
-async function getDailyForecast(lat, lon, cnt, unit) {
+async function getDailyForecast(lat, lon, unit) {
     try {
-        const response = await axios.get(`http://api.openweathermap.org/data/2.5/forecast/daily`, {
+        const response = await axios.get(`http://api.openweathermap.org/data/2.5/daily`, {
             params: {
                 lat,
                 lon,
@@ -113,12 +157,14 @@ async function getDailyForecast(lat, lon, cnt, unit) {
             }
         });
 
+
         return response.data;
     } catch (error) {
         console.error('Error fetching daily forecast:', error);
         throw new Error('Failed to fetch daily forecast');
     }
 }
+
 
 // Function to save geolocation data in SQLite
 function saveGeolocation(location, lat, lon) {
@@ -133,6 +179,7 @@ function saveGeolocation(location, lat, lon) {
     });
 }
 
+
 // Function to retrieve stored geolocation data
 function getGeolocation(location) {
     return new Promise((resolve, reject) => {
@@ -142,6 +189,7 @@ function getGeolocation(location) {
         });
     });
 }
+
 
 // Function to delete stored geolocation data
 function deleteGeolocation(location) {
@@ -153,4 +201,5 @@ function deleteGeolocation(location) {
     });
 }
 
-module.exports = { searchCity, searchZip, getWeatherData, getHourlyForecast, getDailyForecast, getGeolocation, deleteGeolocation };
+
+module.exports = { searchCity, searchZip, getWeatherData, getAstronomyData};

@@ -109,4 +109,4 @@ function saveAstronomyToCache(location, data) {
     });
 }
 
-module.exports = { getCachedWeather, saveWeatherToCache, getCachedForecast, saveForecastToCache };
+module.exports = { getCachedWeather, saveWeatherToCache, getCachedForecast, saveForecastToCache, getCachedAstronomy, saveAstronomyToCache };
