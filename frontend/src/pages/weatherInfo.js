@@ -73,6 +73,32 @@ const WeatherInfo = () => {
         return "Unknown Phase";
     };
 
+
+        const saveLocation = async () => {
+            try {
+                const response = await fetch('/save-location', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        location: decodeURIComponent(location),
+                        lat,
+                        lon
+                    }),
+                });
+        
+                if (!response.ok) {
+                    throw new Error('Failed to save location');
+                }
+        
+                alert('Location saved successfully');
+            } catch (error) {
+                console.error('Error saving location:', error);
+                alert('Failed to save location');
+            }
+        };
+
     if (error) return <p>Error: {error}</p>;
 
     return (
@@ -81,6 +107,7 @@ const WeatherInfo = () => {
             {weather && (
                 <div>
                     <h3>Weather in {decodeURIComponent(location)}</h3>
+                    <button onClick={saveLocation}>Save Location</button>
                     
                     {isLoaded && (
                         <div className={styles.mapContainer}>

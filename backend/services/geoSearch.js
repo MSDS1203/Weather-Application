@@ -81,13 +81,14 @@ async function getWeatherData(lat, lon, unit) {
 }
 
 // Get Hourly Forecast for up to the next 4 days
-async function getHourlyForecast(lat, lon, unit) {
+async function getHourlyForecast(lat, lon, unit = 'imperial', cnt = 96) {
     try {
         const response = await axios.get(`http://api.openweathermap.org/data/2.5/forecast/hourly`, {
             params: {
                 lat,
                 lon,
                 appid: OPENWEATHER_API_KEY,
+                unit,
                 cnt: 96 // Can be changed to a number between 24 (1 day) up to 96 (4 days)
             }
         });
@@ -100,9 +101,9 @@ async function getHourlyForecast(lat, lon, unit) {
 }
 
 // Get Daily Forecast for up to the next 16 days
-async function getDailyForecast(lat, lon, unit) {
+async function getDailyForecast(lat, lon, cnt, unit) {
     try {
-        const response = await axios.get(`http://api.openweathermap.org/data/2.5/daily`, {
+        const response = await axios.get(`http://api.openweathermap.org/data/2.5/forecast/daily`, {
             params: {
                 lat,
                 lon,
@@ -152,4 +153,4 @@ function deleteGeolocation(location) {
     });
 }
 
-module.exports = { searchCity, searchZip, getWeatherData };
+module.exports = { searchCity, searchZip, getWeatherData, saveGeolocation, getHourlyForecast, getDailyForecast, getGeolocation, deleteGeolocation };
