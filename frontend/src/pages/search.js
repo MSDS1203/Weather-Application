@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import styles from "../App.module.css";
-import SearchBar from "../components/searchBar.js";
+import SearchBar from "../components/SearchBar.js";
 
 const Search = () => {
     // State to hold the location data. Not necessary but keeping for possible future use.
