@@ -3,8 +3,8 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 require('dotenv').config();
-const { searchCity, searchZip, getWeatherData } = require('./services/geoSearch');
-const { getCachedWeather, saveWeatherToCache, getCachedForecast, saveForecastToCache  } = require('./services/cache');
+const { searchCity, searchZip, getWeatherData, getAstronomyData } = require('./services/geoSearch');
+const { getCachedWeather, saveWeatherToCache, getCachedForecast, saveForecastToCache, getCachedAstronomy, saveAstronomyToCache} = require('./services/cache');
 const { getHourlyForecast, getDailyForecast} = require('./services/geoSearch');
 
 
@@ -40,6 +40,31 @@ app.get('/zipSearch', async (req, res) => {
     try {
         const result = await searchZip(query);
         res.json(result);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// get location name based on coordinates
+// URL: localhost:3001/geocode/reverse?lat=LATITUDE&lon=LONGITUDE
+// For calling from frontend, use fetch(`/geocode/reverse?lat=${lat}&lon=${lon}`)
+app.get('/geocode/reverse', async (req, res) => {
+    const lat = req.query.lat;
+    const lon = req.query.lon;
+
+    if (!lat || !lon) return res.status(400).json({ error: 'Missing latitude and/or longitude parameters' });
+
+    try {
+        const result = await axios.get(`http://api.openweathermap.org/geo/1.0/reverse`, {
+            params: {
+                lat,
+                lon,
+                limit: 1,
+                appid: OPENWEATHER_API_KEY
+            }
+        });
+        const {name, state, country} = result.data[0];
+        res.json({ name, state, country });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -116,6 +141,44 @@ app.get("/forecast/daily", async (req, res) => {
         res.json(forecast);
     } catch (error) {
         res.status(500).json({ error: error.message });
+    }
+});
+
+app.use(express.json());
+app.post('/save-location', async (req, res) => {
+    const { location, lat, lon } = req.body;
+    try {
+        saveGeolocation(location, lat, lon);
+        res.status(200).send('Location saved successfully');
+    } catch (error) {
+        res.status(500).send('Error saving location');
+    }
+});
+
+// Route to get astronomy data by location
+// URL: localhost:3001/astronomy?location=LOCATION
+app.get("/astronomy", async (req, res) => {
+    const { location } = req.query;
+    if (!location) return res.status(400).json({ error: "Location is required" });
+
+    try {
+        // Check SQLite Cache First
+        console.log(`Checking cache for astronomy data for location: ${location}`);
+        const cachedAstronomy = await getCachedAstronomy(location);
+        if (cachedAstronomy) {
+            console.log("Serving astronomy data from cache");
+            return res.json(cachedAstronomy);
+        }
+
+        console.log(`Fetching astronomy data from API for location: ${location}`);
+        const astronomyData = await getAstronomyData(location);
+
+        console.log(`Saving fetched astronomy data to cache for location: ${location}`);
+        await saveAstronomyToCache(location, astronomyData);
+        res.json(astronomyData);
+    } catch (error) {
+        console.error("Error fetching astronomy data:", error);
+        res.status(500).json({ error: "Failed to retrieve astronomy data" });
     }
 });
 

@@ -80,30 +80,47 @@ function saveForecastToCache(lat, lon, type, data) {
     });
 }
 
-// Function to get cached astronomy data
 function getCachedAstronomy(location) {
     return new Promise((resolve, reject) => {
+        console.log(`Querying astronomy cache for location: ${location}`);
         db.get("SELECT data, timestamp FROM astronomy_cache WHERE location = ?", [location], (err, row) => {
-            if (err) reject(err);
-            else if (row && Date.now() - row.timestamp < 24 * 60 * 60 * 1000) { // 24-hour expiration
-                console.log("Serving astronomy data from SQLite cache");
-                resolve(JSON.parse(row.data));
+            if (err) {
+                console.error("Error in getCachedAstronomy:", err);
+                reject(err);
+            } else if (row) {
+                console.log("Row found in astronomy_cache:", row); // Debugging
+                const currentTime = Date.now();
+                const cacheAge = currentTime - row.timestamp;
+                console.log(`Cache age: ${cacheAge} ms`);
+                if (cacheAge < 24 * 60 * 60 * 1000) {
+                    console.log("Serving astronomy data from SQLite cache");
+                    resolve(JSON.parse(row.data));
+                } else {
+                    console.log("Astronomy cache expired, serving fresh data");
+                    resolve(null);
+                }
             } else {
+                console.log("No astronomy data found in cache");
                 resolve(null);
             }
         });
     });
 }
 
-// Function to save astronomy data to cache
 function saveAstronomyToCache(location, data) {
     return new Promise((resolve, reject) => {
+        console.log(`Saving astronomy data for location: ${location}`); // Debugging
         db.run(
             "INSERT OR REPLACE INTO astronomy_cache (location, data, timestamp) VALUES (?, ?, ?)",
             [location, JSON.stringify(data), Date.now()],
             (err) => {
-                if (err) reject(err);
-                else resolve();
+                if (err) {
+                    console.error("Error saving astronomy data to cache:", err);
+                    reject(err);
+                } else {
+                    console.log("Astronomy data saved to cache successfully");
+                    resolve();
+                }
             }
         );
     });
