@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
-import styles from "../App.module.css";
+import { useNavigate, Link } from 'react-router-dom';
+import "./search.css";
 import SearchBar from "../components/SearchBar.js";
 
 const Search = () => {
@@ -17,10 +17,28 @@ const Search = () => {
     };
 
     return (
-        <div className={styles.container}>
-            <h2>Weather App</h2>
-
-            <SearchBar onSelect={handleSelectLocation} /> {/* Pass handleSelectLocation to SearchBar */}
+        <div>
+            <div>
+                <Link to="/saved"><button style={{
+                    position: 'absolute',
+                    top: '23%',
+                    right: '21%',
+                    padding: '10px',
+                    width: '210px'
+                }}
+                className={"button"}>SAVED LOCATIONS</button></Link>
+                <button style={{
+                    position: 'absolute',
+                    top: '28%',
+                    right: '21%',
+                    padding: '10px',
+                    width: '210px'
+                }}
+                className={"button"}>FAHRENHEIT / CELSIUS</button>
+            </div>
+            <div className="container">
+                <SearchBar onSelect={handleSelectLocation} /> {/* Pass handleSelectLocation to SearchBar */}
+            </div>
         </div>
     );
 };

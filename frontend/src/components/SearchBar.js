@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { usePlacesWidget } from 'react-google-autocomplete';
-import styles from "../App.module.css";
+import './SearchBar.css'
 
 const SearchBar = ({ onSelect }) => {
     const [query, setQuery] = useState('');
@@ -66,16 +66,16 @@ const SearchBar = ({ onSelect }) => {
     };
 
     return (
-        <div className={styles.inputContainer}>
+        <div className={"inputContainer"}>
             <input
                 ref={ref}
                 type="text"
-                placeholder="Search for a location..."
+                placeholder="City, Zip Code, etc."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
             />
-            <button className={styles.button} onClick={handleCurrentLocation} disabled={loadingLocation}>
-                {loadingLocation ? "Getting Location..." : "Use Current Location"}
+            <button className={"button"} onClick={handleCurrentLocation} disabled={loadingLocation}>
+                {loadingLocation ? "Getting Location..." : "USE CURRENT LOCATION"}
             </button>
         </div>
     );

@@ -22,12 +22,19 @@ const Saved = () => {
 
     return (
         <div>
-            <h1>Saved Locations</h1>
-            <div>
+            <button style={{
+                    position: 'absolute',
+                    top: '23%',
+                    right: '21%',
+                    padding: '10px',
+                    width: '210px'
+                }}
+                className={"button"}>BACK</button>
+            <div classname={"container"}>
                 {Object.entries(locations).map(([location, values]) => (
                     <div key={location} className = "savedLoc">
                         <h3>{values.location}</h3>
-                        <button type="button">Unsave Location</button>
+                        <button classname={"button"}>Unsave Location</button>
                         <WeatherDisplay lat={values.latitude} lon={values.longitude} />
                     </div>
                 ))}
