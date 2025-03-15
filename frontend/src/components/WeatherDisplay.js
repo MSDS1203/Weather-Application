@@ -1,3 +1,4 @@
+/* eslint-disable react/style-prop-object */
 import React, { useState, useEffect } from "react";
 
 const WeatherDisplay = ({ lat, lon }) => {
@@ -28,10 +29,13 @@ const WeatherDisplay = ({ lat, lon }) => {
 
     return (
         <div>
-            <h2>Weather in {weather.name}</h2>
-            <p>Temperature: {weather.main.temp}°F</p>
+            <p>12:00 AM - MONDAY</p>
+            <p></p>
+            <p style={{fontSize: '35px', textTransform: 'uppercase'}}>{weather.weather[0].description}</p>
+            <p style={{fontSize: '75px'}}>{weather.main.temp}°F</p>
+            <p>High: text</p>
+            <p>Low: text</p>
             <p>Feels like: {weather.main.feels_like}°F</p>
-            <p>Condition: {weather.weather[0].description}</p>
             <p>Humidity: {weather.main.humidity}%</p>
             <p>Wind Speed: {weather.wind.speed} mph</p>
         </div>

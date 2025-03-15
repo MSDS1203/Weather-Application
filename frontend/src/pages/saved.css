@@ -27,9 +27,9 @@ h1 {
     border: 2px solid #654c3f;
     background: #daba97;
     width: 100%;
-    height: 600px;
-    max-width: 300px;
-    margin-top: 220px;
+    height: 750px;
+    max-width: 380px;
+    margin-top: 55px;
     margin-left: 80px;
     margin-right: 15px;
     margin-bottom: 15px;
@@ -46,4 +46,23 @@ h1 {
   
 .button:hover {
     background-color: #f1e5d4;
+}
+
+.removeLoc {
+    background-color: #f1e5d4;
+    color: #654c3f;
+    padding: 5px 5px;
+    width: 50px;
+    height: 50px;
+    border: 5px solid #654c3f;
+    border-radius: 5px;
+    font-size: 30px;
+    font-weight: bolder;
+    cursor: pointer;
+}
+
+.removeLoc:hover {
+    background-color: rgb(226, 37, 37);
+    border-color: black;
+    color: black;
 }
