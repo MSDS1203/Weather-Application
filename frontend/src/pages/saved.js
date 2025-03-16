@@ -40,14 +40,14 @@ const Saved = () => {
                     <WeatherDisplay lat={values.latitude} lon={values.longitude} />
                     <button style= {{
                         position: "relative",
-                        top: "-87%",
+                        top: "-92%",
                         left: "-41.5%"
                         }} className={"removeLoc"}>X</button>
                     <img src={image} alt="placeholder" style={{
                         position: "relative",
                         width: '80px',
                         height: '80px',
-                        top: '-92.5%',
+                        top: '-97.5%',
                         left: '-58%'
                         }} />
                 </div>
