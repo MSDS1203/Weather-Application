@@ -33,10 +33,10 @@ const WeatherDisplay = ({ lat, lon }) => {
             <p></p>
             <p style={{fontSize: '35px', textTransform: 'uppercase'}}>{weather.weather[0].description}</p>
             <p style={{fontSize: '75px'}}>{weather.main.temp}°F</p>
-            <p>High: text</p>
+            <p style={{marginTop: '-60px'}}>High: text</p>
             <p>Low: text</p>
             <p>Feels like: {weather.main.feels_like}°F</p>
-            <p>Humidity: {weather.main.humidity}%</p>
+            <p style={{marginTop: '80px'}}>Humidity: {weather.main.humidity}%</p>
             <p>Wind Speed: {weather.wind.speed} mph</p>
         </div>
     );

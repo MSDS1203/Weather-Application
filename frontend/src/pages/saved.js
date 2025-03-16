@@ -2,19 +2,18 @@ import React from "react";
 import { Link } from 'react-router-dom';
 import WeatherDisplay from "../components/WeatherDisplay";
 import './saved.css';
+import image from './wi-day-sunny.svg';
 
 const Saved = () => {
     const locations = {
         "Cary": {
-            "city":"Cary",
-            "state":"NC",
+            "city":"Cary, NC",
             "country":"US", 
             "latitude":35.7882893,
             "longitude":-78.7812081
         },
         "Greenville": {
-            "city":"Greenville",
-            "state":"NC",
+            "city":"Greenville, NC",
             "country":"US",
             "latitude":35.613224,
             "longitude":-77.3724593
@@ -37,14 +36,20 @@ const Saved = () => {
             className={"button"}>BACK</button></Link>
             {Object.entries(locations).map(([location, values]) => (
                 <div key={location} className = "savedLoc">
-                    <h1>{values.city}, {values.state}, {values.country}</h1>
+                    <p style={{fontSize: "40px", fontWeight: '500', marginBottom: '-15px'}}>{values.city}, {values.country}</p>
                     <WeatherDisplay lat={values.latitude} lon={values.longitude} />
                     <button style= {{
                         position: "relative",
-                        top: "-83%",
-                        left: "-53%"
-                    }}
-                    className={"removeLoc"}>X</button>
+                        top: "-87%",
+                        left: "-41.5%"
+                        }} className={"removeLoc"}>X</button>
+                    <img src={image} alt="placeholder" style={{
+                        position: "relative",
+                        width: '80px',
+                        height: '80px',
+                        top: '-92.5%',
+                        left: '-58%'
+                        }} />
                 </div>
             ))}
         </div>
