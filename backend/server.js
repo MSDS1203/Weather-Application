@@ -3,7 +3,7 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 require('dotenv').config();
-const { searchCity, searchZip, getWeatherData, getAstronomyData } = require('./services/geoSearch');
+const { searchCity, searchZip, getWeatherData, saveGeolocation, getAstronomyData, getAllGeolocations } = require('./services/geoSearch');
 const { getCachedWeather, saveWeatherToCache, getCachedForecast, saveForecastToCache, getCachedAstronomy, saveAstronomyToCache} = require('./services/cache');
 const { getHourlyForecast, getDailyForecast} = require('./services/geoSearch');
 
@@ -144,6 +144,7 @@ app.get("/forecast/daily", async (req, res) => {
     }
 });
 
+// Route to save geolocation
 app.use(express.json());
 app.post('/save-location', async (req, res) => {
     const { location, lat, lon } = req.body;
@@ -152,6 +153,16 @@ app.post('/save-location', async (req, res) => {
         res.status(200).send('Location saved successfully');
     } catch (error) {
         res.status(500).send('Error saving location');
+    }
+});
+
+// Route to get all saved geolocations
+app.get('/saved-locations', async (req, res) => {
+    try {
+        const locations = await getAllGeolocations();
+        res.json(locations);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 });
 
