@@ -3,7 +3,7 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 require('dotenv').config();
-const { searchCity, searchZip, getWeatherData, getAstronomyData } = require('./services/geoSearch');
+const { searchCity, searchZip, getWeatherData, saveGeolocation, getAstronomyData } = require('./services/geoSearch');
 const { getCachedWeather, saveWeatherToCache, getCachedForecast, saveForecastToCache, getCachedAstronomy, saveAstronomyToCache} = require('./services/cache');
 const { getHourlyForecast, getDailyForecast} = require('./services/geoSearch');
 
