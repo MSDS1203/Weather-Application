@@ -62,6 +62,15 @@ input:focus {
   box-sizing: border-box; /* Ensure padding is included in height */
 }
 
+/* Additional styling for current location button */
+.currentLocationButton {
+  /* Center text properly */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 .button:hover {
   background-color: #41337A; /* Darker color when hovering */
 }
