@@ -67,6 +67,7 @@ async function searchZip(query) {
 // get weather data based on latitude and longitude
 async function getWeatherData(lat, lon, unit) {
     try {
+        console.log(`Fetching weather data for lat: ${lat}, lon: ${lon}, unit: ${unit}`);
         const response = await axios.get(`http://api.openweathermap.org/data/2.5/weather`, {
             params: {
                 lat,
@@ -78,7 +79,11 @@ async function getWeatherData(lat, lon, unit) {
 
         return response.data;
     } catch (error) {
-        console.error('Error fetching weather data:', error);
+        console.error('Error fetching weather data:', {
+            message: error.message,
+            response: error.response ? error.response.data : null,
+            stack: error.stack
+        });
         throw new Error('Failed to fetch weather data');
     }
 }
@@ -204,4 +209,17 @@ function deleteGeolocation(location) {
     });
 }
 
-module.exports = { searchCity, searchZip, getWeatherData, saveGeolocation, getHourlyForecast, getDailyForecast, getGeolocation, deleteGeolocation, getAstronomyData };
+//Needed to get ALL geolocations
+function getAllGeolocations() {
+    return new Promise((resolve, reject) => {
+        db.all("SELECT location, lat, lon FROM geolocation", [], (err, rows) => {
+            if (err) reject(err);
+            else {
+                console.log("All geolocations:", rows);
+                resolve(rows);
+            }
+        });
+    });
+}
+
+module.exports = { getAllGeolocations, searchCity, searchZip, getWeatherData, saveGeolocation, getHourlyForecast, getDailyForecast, getGeolocation, deleteGeolocation, getAstronomyData };

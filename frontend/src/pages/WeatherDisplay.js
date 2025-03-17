@@ -11,6 +11,7 @@ const WeatherDisplay = ({ lat, lon, location }) => {
         const fetchWeather = async () => {
             try {
                 const response = await fetch(`/weather?lat=${lat}&lon=${lon}`);
+                console.log(`Fetching weather data for lat: ${lat}, lon: ${lon}`);
                 if (!response.ok) throw new Error("Failed to fetch weather data");
 
                 const data = await response.json();
