@@ -11,14 +11,17 @@ const Saved = () => {
     useEffect(() => {
         const fetchSavedLocations = async () => {
             try {
+                console.log("Fetching saved locations...");
                 const response = await axios.get("/saved-locations");
+                console.log("Response from server:", response.data);
                 const savedLocations = response.data.reduce((acc, loc) => {
                     acc[loc.location] = {
                         location: loc.location,
-                        latitude: loc.latitude,
-                        longitude: loc.longitude,
+                        latitude: loc.lat,
+                        longitude: loc.lon,
                     };
                     return acc;
+                    
                 }, {});
                 console.log("Saved locations:", savedLocations);
                 setLocations(savedLocations);
@@ -26,7 +29,6 @@ const Saved = () => {
                 console.error("Error fetching saved locations:", error);
             }
         };
-
         fetchSavedLocations();
     }, []);
 
