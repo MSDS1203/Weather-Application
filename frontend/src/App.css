@@ -28,6 +28,39 @@
   color: #61dafb;
 }
 
+/* styling for the Google Places Autocomplete dropdown */
+/* needs to be here since Google Maps API injects it into the DOM */
+.pac-container {
+  background-color: white !important;
+  border: 1px solid #41337A !important;
+  border-radius: 8px !important;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2) !important;
+  font-size: 16px !important;
+}
+
+/* each result in the dropdown */
+.pac-item {
+  padding: 10px !important;
+  cursor: pointer !important;
+}
+
+/* Highlight on hover */
+.pac-item:hover {
+  background-color: #5ad8d6 !important;
+  color: black !important;
+}
+
+/* Style the primary text (e.g., city name) */
+.pac-item .pac-item-query {
+  font-weight: bold !important;
+  color: #41337A !important;
+}
+
+/* Hide unnecessary icons (optional) */
+.pac-icon {
+  display: none !important;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
