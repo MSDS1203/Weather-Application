@@ -32,12 +32,12 @@ const WeatherDisplay = ({ lat, lon }) => {
             <p>12:00 AM - MONDAY</p>
             <p></p>
             <p style={{fontSize: '35px', textTransform: 'uppercase'}}>{weather.weather[0].description}</p>
-            <p style={{fontSize: '75px'}}>{weather.main.temp}°F</p>
-            <p style={{marginTop: '-60px'}}>High: text</p>
-            <p>Low: text</p>
-            <p>Feels like: {weather.main.feels_like}°F</p>
-            <p style={{marginTop: '80px'}}>Humidity: {weather.main.humidity}%</p>
-            <p>Wind Speed: {weather.wind.speed} mph</p>
+            <p style={{fontSize: '75px'}}><b>{weather.main.temp}</b>°F</p>
+            <p style={{marginTop: '-60px', marginLeft: '-150px'}}><b>High:</b> text</p>
+            <p style={{marginTop: '-47px', marginLeft: '150px'}}><b>Low:</b> text</p>
+            <p><b>Feels like:</b> {weather.main.feels_like}°F</p>
+            <p style={{marginTop: '120px'}}><b>Humidity:</b> {weather.main.humidity}%</p>
+            <p><b>Wind Speed:</b> {weather.wind.speed} mph</p>
         </div>
     );
 };

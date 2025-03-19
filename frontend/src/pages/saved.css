@@ -1,6 +1,6 @@
 body {
     display: "flex";
-    flex-direction: row;
+    flex-direction: column;
     height: "100vh";
     background-color: #be9178;
 }
@@ -9,12 +9,13 @@ h1 {
     text-align: center;
 }
 
-.container {
+.savedCont {
     text-align: center;
     height: 100%; 
     color: #331E36;
     font-size: 20px;
     padding: 40px;
+    margin-top: 4%;
     background-color: #be9178;
     display: flex;
     flex-direction: row;
@@ -26,13 +27,11 @@ h1 {
     text-align: center;
     border: 2px solid #654c3f;
     background: #daba97;
-    width: 100%;
+    width: 380px;
     height: 750px;
-    max-width: 380px;
     margin-top: 55px;
     margin-left: 80px;
     margin-right: 15px;
-    margin-bottom: 15px;
 }
 
 .button {
@@ -65,4 +64,27 @@ h1 {
     background-color: rgb(226, 37, 37);
     border-color: black;
     color: black;
+}
+
+.nextButton {
+    background-color: #daba97;
+    color: #654c3f;
+    padding: 10px 20px;
+    height: 750px;
+    border: 2px solid #654c3f;
+    border-radius: 10px;
+    margin-top: 55px;
+    margin-left: 80px;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.nextButton:hover {
+    background-color: #f1e5d4;
+}
+
+.nextButton:disabled {
+    background-color: #be9178;
+    color: #331E36;
+    cursor: default;
 }
