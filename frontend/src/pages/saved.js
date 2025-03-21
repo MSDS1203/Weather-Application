@@ -71,18 +71,18 @@ const Saved = () => {
             }}>PREV</button>
             {Object.entries(locations).slice(lowOb, highOb).map(([location, values]) => (
                 <div key={location} className = {"savedLoc"}>
-                    <p style={{fontSize: "25px", fontWeight: '500', marginTop: '60px', marginBottom: '-15px'}}><b>{values.location}</b></p>
+                    <p style={{fontFamily: "VT323", fontSize: "28px", fontWeight: '500', marginTop: '60px', marginBottom: '-15px'}}><b>{values.location}</b></p>
                     <WeatherDisplay lat={values.latitude} lon={values.longitude} />
                     <button onClick={() => unsaveLocation(location)} style= {{
                         position: "relative",
-                        top: "-675px",
+                        top: "-565px",
                         left: "-160px"
                         }} className={"removeLoc"}>X</button>
                     <img src={image} alt="placeholder" style={{
                         position: "relative",
                         width: '80px',
                         height: '80px',
-                        top: '-725px',
+                        top: '-615px',
                         left: '-223px'
                     }} />
                 </div>
