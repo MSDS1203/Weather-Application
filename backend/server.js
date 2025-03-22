@@ -3,7 +3,7 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 require('dotenv').config();
-const { searchCity, searchZip, getWeatherData, saveGeolocation, getAstronomyData, getAllGeolocations } = require('./services/geoSearch');
+const { searchCity, searchZip, getWeatherData, saveGeolocation, getAstronomyData, getAllGeolocations, getGeolocation } = require('./services/geoSearch');
 const { getCachedWeather, saveWeatherToCache, getCachedForecast, saveForecastToCache, getCachedAstronomy, saveAstronomyToCache} = require('./services/cache');
 const { getHourlyForecast, getDailyForecast} = require('./services/geoSearch');
 
@@ -163,6 +163,32 @@ app.get('/saved-locations', async (req, res) => {
         res.json(locations);
     } catch (error) {
         res.status(500).json({ error: error.message });
+    }
+});
+
+//Route to check if a location is saved
+app.get('/is-saved', async (req, res) => {
+    const location = req.query;
+    try {
+        const savedLocation = await getGeolocation(location);
+        if (savedLocation) {
+            res.status(200).send('Location is saved');
+        } else {
+            res.status(404).send('Location is not saved');
+        }
+    } catch (error) {
+        res.status(500).send('Error checking location');
+    }
+});
+
+//Route to delete a saved location
+app.get('/delete-location', async (req, res) => {
+    const location = req.query;
+    try {
+        deleteLocation(location);
+        res.status(200).send('Location deleted successfully');
+    } catch (error) {
+        res.status(500).send('Error deleting location');
     }
 });
 
