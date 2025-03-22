@@ -6,6 +6,7 @@ require('dotenv').config();
 const { searchCity, searchZip, getWeatherData, saveGeolocation, getAstronomyData, getAllGeolocations, getGeolocation } = require('./services/geoSearch');
 const { getCachedWeather, saveWeatherToCache, getCachedForecast, saveForecastToCache, getCachedAstronomy, saveAstronomyToCache} = require('./services/cache');
 const { getHourlyForecast, getDailyForecast} = require('./services/geoSearch');
+const e = require('express');
 
 
 const app = express();
@@ -168,13 +169,13 @@ app.get('/saved-locations', async (req, res) => {
 
 //Route to check if a location is saved
 app.get('/is-saved', async (req, res) => {
-    const location = req.query;
+    const { location } = req.query;
     try {
         const savedLocation = await getGeolocation(location);
         if (savedLocation) {
-            res.status(200).send('Location is saved');
+            res.json(true);
         } else {
-            res.status(404).send('Location is not saved');
+            res.json(false);
         }
     } catch (error) {
         res.status(500).send('Error checking location');
