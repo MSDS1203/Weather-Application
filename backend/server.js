@@ -207,19 +207,6 @@ app.get('/is-saved', async (req, res) => {
     }
 });
 
-//Route to delete a saved location
-app.delete('/delete-location', async (req, res) => {
-    const { location } = req.query;
-    try {
-        const result = await deleteGeolocation(location);
-        console.log('Delete result:', result);
-        res.status(200).send('Location deleted successfully');
-        
-    } catch (error) {
-        res.status(500).send('Error deleting location');
-    }
-});
-
 // Route to get astronomy data by location
 // URL: localhost:3001/astronomy?location=LOCATION
 app.get("/astronomy", async (req, res) => {

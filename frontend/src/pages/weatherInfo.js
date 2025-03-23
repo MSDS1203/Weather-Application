@@ -11,6 +11,7 @@ const WeatherInfo = () => {
     const [weather, setWeather] = useState(null);
     const [loading, setLoading] = useState(false);
     const [astronomyData, setAstronomyData] = useState(null);
+    const [buttonText, setButtonText] = useState('Save Location');
     const [error, setError] = useState(null);
     const containerStyle = {
         width: "60%",
@@ -20,6 +21,26 @@ const WeatherInfo = () => {
       const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: GOOGLE_API_KEY,
     });
+
+    // Check if the location is currently saved
+    useEffect(() => {
+        const checkLocation = async () => {
+            try {
+                const response = await fetch(`/is-saved?location=${location}`);
+                const data = await response.json();
+
+                if (data){
+                    setButtonText('Un-save Location');
+                } else{
+                    setButtonText('Save Location');
+                }
+
+            } catch (err) {
+                console.error("Error checking location:", err);
+            }
+        };
+        checkLocation();
+    }, [location]);
 
     useEffect(() => {
         const fetchAstronomyData = async () => {
@@ -72,9 +93,11 @@ const WeatherInfo = () => {
         if (phase > 0.75 && phase <= 1) return "Waning Crescent";
         return "Unknown Phase";
     };
+        
+    const saveLocation = async () => {
+        if(buttonText === 'Save Location') {
+            setButtonText('Un-save Location');
 
-
-        const saveLocation = async () => {
             try {
                 const response = await fetch('/save-location', {
                     method: 'POST',
@@ -91,13 +114,35 @@ const WeatherInfo = () => {
                 if (!response.ok) {
                     throw new Error('Failed to save location');
                 }
-        
+
+                setButtonText('Un-save Location');
                 alert('Location saved successfully');
+                
             } catch (error) {
                 console.error('Error saving location:', error);
                 alert('Failed to save location');
             }
-        };
+        } else {
+            try{
+                const response = await fetch(`/delete-location/${encodeURIComponent(location)}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+        
+                if (!response.ok) {
+                    throw new Error('Failed to delete location');
+                }
+                alert('Location deleted successfully');
+
+            } catch (error) {
+                console.error('Error deleting location:', error);
+                alert('Failed to delete location');
+            }
+            setButtonText('Save Location');
+        }
+    };
 
     if (error) return <p>Error: {error}</p>;
 
@@ -107,7 +152,8 @@ const WeatherInfo = () => {
             {weather && (
                 <div>
                     <h3>Weather in {decodeURIComponent(location)}</h3>
-                    <button onClick={saveLocation}>Save Location</button>
+                    
+                    <button onClick={saveLocation}>{buttonText}</button>
                     
                     {isLoaded && (
                         <div className={styles.mapContainer}>
