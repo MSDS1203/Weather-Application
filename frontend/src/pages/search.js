@@ -17,7 +17,7 @@ const Search = () => {
     };
 
     return (
-        <div>
+        <div className = {"searchCont"}>
             <div>
                 <Link to="/saved"><button style={{
                     position: 'absolute',
