@@ -36,15 +36,26 @@ const Saved = () => {
         fetchSavedLocations();
     }, []);
 
-    // Function to unsave a location
-    const unsaveLocation = (key) => {
-        // Create a copy of the locations object
-        const updatedLocations = { ...locations };
-        // Remove the location with the given key
-        delete updatedLocations[key];
-        // Update the state with the new locations object
-        setLocations(updatedLocations);
+    const unsaveLocation = async (key) => {
+        try {
+            const response = await axios.delete(`/delete-location/${encodeURIComponent(key)}`);
+            
+            if (response.status === 200) {
+                console.log("Successfully deleted:", key);
+    
+                setLocations(prevLocations => {
+                    const updatedLocations = { ...prevLocations };
+                    delete updatedLocations[key];
+                    return updatedLocations;
+                });
+            } else {
+                console.warn("Deletion failed:", response.data);
+            }
+        } catch (error) {
+            console.error("Error unsaving location:", error);
+        }
     };
+    
 
     const handlePrev = () => {
         setLowOb(lowOb-3);
