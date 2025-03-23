@@ -157,6 +157,31 @@ app.post('/save-location', async (req, res) => {
     }
 });
 
+// Route to delete a saved location
+app.delete('/delete-location/:location', async (req, res) => {
+    const location = req.params.location;
+    console.log("Received delete request for:", location);
+
+    if (!location) {
+        return res.status(400).json({ error: 'Location name is required' });
+    }
+
+    try {
+        const deleted = await deleteGeolocation(location);
+        if (deleted) {
+            console.log(`Successfully deleted: ${location}`);
+            res.status(200).send('Location deleted successfully');
+        } else {
+            console.warn(`Location not found in DB: ${location}`);
+            res.status(404).send('Location not found');
+        }
+    } catch (error) {
+        console.error("Server error:", error);
+        res.status(500).json({ error: error.message });
+    }
+    
+});
+
 // Route to get all saved geolocations
 app.get('/saved-locations', async (req, res) => {
     try {

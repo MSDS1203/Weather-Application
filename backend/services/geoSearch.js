@@ -199,15 +199,20 @@ function getGeolocation(location) {
     });
 }
 
-// Function to delete stored geolocation data
 function deleteGeolocation(location) {
     return new Promise((resolve, reject) => {
         db.run("DELETE FROM geolocation WHERE location = ?", [location], function (err) {
-            if (err) reject(err);
-            else resolve(this.changes > 0);
+            if (err) {
+                console.error("Database deletion error:", err);
+                reject(err);
+            } else {
+                console.log(`Deleted rows count: ${this.changes}`);
+                resolve(this.changes > 0);
+            }
         });
     });
 }
+
 
 //Needed to get ALL geolocations
 function getAllGeolocations() {
