@@ -3,7 +3,7 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 require('dotenv').config();
-const { searchCity, searchZip, getWeatherData, saveGeolocation, getAstronomyData, getAllGeolocations, getGeolocation } = require('./services/geoSearch');
+const { searchCity, searchZip, getWeatherData, saveGeolocation, getAstronomyData, getAllGeolocations, getGeolocation, deleteGeolocation } = require('./services/geoSearch');
 const { getCachedWeather, saveWeatherToCache, getCachedForecast, saveForecastToCache, getCachedAstronomy, saveAstronomyToCache} = require('./services/cache');
 const { getHourlyForecast, getDailyForecast} = require('./services/geoSearch');
 const e = require('express');
@@ -183,11 +183,13 @@ app.get('/is-saved', async (req, res) => {
 });
 
 //Route to delete a saved location
-app.get('/delete-location', async (req, res) => {
-    const location = req.query;
+app.delete('/delete-location', async (req, res) => {
+    const { location } = req.query;
     try {
-        deleteLocation(location);
+        const result = await deleteGeolocation(location);
+        console.log('Delete result:', result);
         res.status(200).send('Location deleted successfully');
+        
     } catch (error) {
         res.status(500).send('Error deleting location');
     }
