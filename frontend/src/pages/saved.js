@@ -95,7 +95,7 @@ const Saved = () => {
                 top: '5%',
                 right: '20%',
                 width: '210px'
-            }}>{isMetric ? "Switch to Imperial" : "Switch to Metric"}</button>
+            }}>{isMetric ? "SWITCH TO IMPERIAL" : "SWITCH TO METRIC"}</button>
             <button onClick = {handlePrev} className={'nextButton'} disabled = {lowOb === 0} style = {{
                 position: 'absolute',
                 left: '1%'
