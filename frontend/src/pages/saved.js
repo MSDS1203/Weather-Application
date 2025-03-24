@@ -10,9 +10,19 @@ const Saved = () => {
     const [locations, setLocations] = useState({});
     const [lowOb, setLowOb] = useState(0);
     const [highOb, setHighOb] = useState(3);
-    // Unit toggle state
-    const [isMetric, setIsMetric] = useState(false);
-    const toggleUnits = () => setIsMetric((prev) => !prev);
+
+    // Load unit preference from localStorage or default to false (imperial)
+    const [isMetric, setIsMetric] = useState(() => {
+        return localStorage.getItem("isMetric") === "true"; // Convert stored string to boolean
+    });    
+    // Toggle between metric and imperial
+    const toggleUnits = () => {
+        setIsMetric((prev) => {
+            const newValue = !prev; // Toggle the value
+            localStorage.setItem("isMetric", newValue); // Store the updated value
+            return newValue;
+        });
+    };
 
 
     // Fetch saved locations from the server when the component mounts
