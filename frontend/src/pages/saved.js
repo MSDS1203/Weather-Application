@@ -93,7 +93,7 @@ const Saved = () => {
             {Object.entries(locations).slice(lowOb, highOb).map(([location, values]) => (
                 <div key={location} className = {"savedLoc"}>
                     <p style={{fontFamily: "VT323", fontSize: "28px", fontWeight: '500', marginTop: '60px', marginBottom: '-15px'}}><b>{values.location}</b></p>
-                    <WeatherDisplay lat={values.latitude} lon={values.longitude} />
+                    <WeatherDisplay lat={values.latitude} lon={values.longitude} isMetric={isMetric} />
                     <button onClick={() => unsaveLocation(location)} style= {{
                         position: "relative",
                         top: "-565px",
