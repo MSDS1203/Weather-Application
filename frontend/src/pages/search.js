@@ -8,6 +8,20 @@ const Search = () => {
     const [locationData, setLocationData] = useState(null);
     const navigate = useNavigate();
 
+    // Load unit preference from localStorage or default to false (imperial)
+    const [isMetric, setIsMetric] = useState(() => {
+        return localStorage.getItem("isMetric") === "true"; // Convert stored string to boolean
+    });    
+    
+    // Toggle between metric and imperial
+    const toggleUnits = () => {
+        setIsMetric((prev) => {
+            const newValue = !prev; // Toggle the value
+            localStorage.setItem("isMetric", newValue); // Store the updated value
+            return newValue;
+        });
+    };
+
     const handleSelectLocation = (data) => {
         setLocationData(data); // Set the location data from the search bar
         if (data) {
@@ -27,14 +41,14 @@ const Search = () => {
                     width: '210px'
                 }}
                 className={"button"}>SAVED LOCATIONS</button></Link>
-                <button style={{
+                <button onClick={toggleUnits} style={{
                     position: 'absolute',
                     top: '28%',
                     right: '21%',
                     padding: '10px',
                     width: '210px'
                 }}
-                className={"button"}>FAHRENHEIT / CELSIUS</button>
+                className={"button"}>{isMetric ? "SWITCH TO IMPERIAL" : "SWITCH TO METRIC"}</button>
             </div>
             <div className="container">
                 <SearchBar onSelect={handleSelectLocation} /> {/* Pass handleSelectLocation to SearchBar */}
