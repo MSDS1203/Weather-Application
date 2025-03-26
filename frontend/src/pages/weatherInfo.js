@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import styles from "./WeatherDisplay.module.css"; 
+import { getStoredUnitChoice, toggleUnitChoice } from "../utils.js";
 
 const VC_API_KEY = process.env.REACT_APP_VISUAL_CROSSING_API_KEY;
 const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
@@ -13,6 +14,7 @@ const WeatherInfo = () => {
     const [astronomyData, setAstronomyData] = useState(null);
     const [buttonText, setButtonText] = useState('Save Location');
     const [error, setError] = useState(null);
+    const [isMetric, setIsMetric] = useState(getStoredUnitChoice()); // load unit preference from localStorage
     const containerStyle = {
         width: "60%",
         height: "400px",

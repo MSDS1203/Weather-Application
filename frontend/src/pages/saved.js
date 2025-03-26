@@ -4,6 +4,7 @@ import { data, Link } from 'react-router-dom';
 import WeatherDisplay from "../components/WeatherDisplay";
 import './saved.css';
 import image from './wi-day-sunny.svg';
+import { getStoredUnitChoice, toggleUnitChoice } from "../utils.js";
 
 const Saved = () => {
     // Convert locations to a state variable
@@ -11,19 +12,8 @@ const Saved = () => {
     const [lowOb, setLowOb] = useState(0);
     const [highOb, setHighOb] = useState(3);
 
-    // Load unit preference from localStorage or default to false (imperial)
-    const [isMetric, setIsMetric] = useState(() => {
-        return localStorage.getItem("isMetric") === "true"; // Convert stored string to boolean
-    });    
-    // Toggle between metric and imperial
-    const toggleUnits = () => {
-        setIsMetric((prev) => {
-            const newValue = !prev; // Toggle the value
-            localStorage.setItem("isMetric", newValue); // Store the updated value
-            return newValue;
-        });
-    };
-
+    // Load unit preference from localStorage
+    const [isMetric, setIsMetric] = useState(getStoredUnitChoice());
 
     // Fetch saved locations from the server when the component mounts
     useEffect(() => {
@@ -90,7 +80,7 @@ const Saved = () => {
                 width: '210px'
             }}
             className={"button"}>BACK</button></Link>
-            <button onClick={toggleUnits} className={"button"} style={{
+            <button onClick={() => toggleUnitChoice(setIsMetric)} className={"button"} style={{
                 position: 'absolute',
                 top: '5%',
                 right: '20%',
