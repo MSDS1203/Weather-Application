@@ -2,25 +2,15 @@ import React, { useState } from "react";
 import { useNavigate, Link } from 'react-router-dom';
 import "./search.css";
 import SearchBar from "../components/SearchBar.js";
+import { getStoredUnitChoice, toggleUnitChoice } from "../utils.js";
 
 const Search = () => {
     // State to hold the location data. Not necessary but keeping for possible future use.
     const [locationData, setLocationData] = useState(null);
     const navigate = useNavigate();
 
-    // Load unit preference from localStorage or default to false (imperial)
-    const [isMetric, setIsMetric] = useState(() => {
-        return localStorage.getItem("isMetric") === "true"; // Convert stored string to boolean
-    });    
-    
-    // Toggle between metric and imperial
-    const toggleUnits = () => {
-        setIsMetric((prev) => {
-            const newValue = !prev; // Toggle the value
-            localStorage.setItem("isMetric", newValue); // Store the updated value
-            return newValue;
-        });
-    };
+    // Load unit preference from localStorage
+    const [isMetric, setIsMetric] = useState(getStoredUnitChoice());
 
     const handleSelectLocation = (data) => {
         setLocationData(data); // Set the location data from the search bar
@@ -41,7 +31,7 @@ const Search = () => {
                     width: '210px'
                 }}
                 className={"button"}>SAVED LOCATIONS</button></Link>
-                <button onClick={toggleUnits} style={{
+                <button onClick={() => toggleUnitChoice(setIsMetric)} style={{
                     position: 'absolute',
                     top: '28%',
                     right: '21%',
