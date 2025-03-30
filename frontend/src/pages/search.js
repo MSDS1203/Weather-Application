@@ -29,8 +29,7 @@ const Search = () => {
                     right: '21%',
                     padding: '10px',
                     width: '210px'
-                }}
-                className={"button"}>SAVED LOCATIONS</button></Link>
+                }} className={"button"}>SAVED LOCATIONS</button></Link>
                 <button onClick={() => toggleUnitChoice(setIsMetric)} style={{
                     position: 'absolute',
                     top: '28%',

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
-import styles from "./WeatherDisplay.module.css"; 
+import "./weatherInfo.css"; 
 import { getStoredUnitChoice, toggleUnitChoice } from "../utils.js";
 
 const VC_API_KEY = process.env.REACT_APP_VISUAL_CROSSING_API_KEY;
@@ -16,8 +16,8 @@ const WeatherInfo = () => {
     const [error, setError] = useState(null);
     const [isMetric, setIsMetric] = useState(getStoredUnitChoice()); // load unit preference from localStorage
     const containerStyle = {
-        width: "60%",
-        height: "400px",
+        width: "100%",
+        height: "100%",
       };      
 
       const { isLoaded } = useJsApiLoader({
@@ -149,16 +149,26 @@ const WeatherInfo = () => {
     if (error) return <p>Error: {error}</p>;
 
     return (
-        <div className={styles.container}>
+        <div>
             {loading && <p>Loading...</p>}
             {weather && (
-                <div>
-                    <h3>Weather in {decodeURIComponent(location)}</h3>
-                    
-                    <button onClick={saveLocation}>{buttonText}</button>
+                <div className={"weathCont"}>
+                    <div style={{position: 'absolute', top: '110px', right: '150px', fontSize: '32px', alignContent: 'center'}} className={"nameBox"}>{decodeURIComponent(location)}</div>
+
+                    <div style={{position: 'absolute', top: '180px', right: '150px', fontSize: '18px', alignContent: 'center'}} className={"dateTime"}>
+                        JAN - WED 22
+                    </div>
+
+                    <div style={{position: 'absolute', top: '230px', right: '150px', fontSize: '18px', alignContent: 'center'}} className={"dateTime"}>
+                        12:00 PM
+                    </div>
+
+                    <Link to="/"><button style={{position: 'absolute', bottom: '5%', right: '5%', width: '210px'}} className={"button"}>SEARCH</button></Link>
+                    <Link to="/saved"><button style={{position: 'absolute', bottom: '5%', right: '17.5%', width: '210px'}} className={"button"}>SAVED LOCATIONS</button></Link>
+                    <button className={"button"} style={{position: 'absolute', bottom: '5%', right: '30%', width: '210px'}} onClick={saveLocation}>SAVE THIS LOCATION</button>
                     
                     {isLoaded && (
-                        <div className={styles.mapContainer}>
+                        <div style={{position: 'absolute', top: '110px', left: '150px'}} className={"mapBox"}>
                             <GoogleMap 
                                 mapContainerStyle={containerStyle} 
                                 center={{ lat: parseFloat(lat), lng: parseFloat(lon) }} 
@@ -169,27 +179,44 @@ const WeatherInfo = () => {
                         </div>
                     )}
 
+                    <div style={{position: 'absolute', top: '110px', left: '615px'}} className={"weathAl"}>
+                        <p style={{fontFamily: "VT323", marginTop: '10px',fontSize: "40px", fontWeight: '500'}}>WEATHER ALERT</p>
+                        <p style={{fontFamily: "Silkscreen", fontSize: "18px", fontWeight: '400', marginTop: '-30px'}}>
+                            weather alert goes here, displays no notice if no alert text text text text
+                        </p>
+                    </div>
+
+                    <div style={{position: 'absolute', top: '310px', left: '615px'}} className={"forecast"}>
+                        <button className={"button"} style={{position: 'absolute', top: '-25px', right: '20px', width: '130px'}}>VIEW DAILY</button>
+                        forecast goes here
+                    </div>
+
                     <img 
                         src={`http://openweathermap.org/img/w/${weather.weather[0].icon}.png`} 
                         alt="wthr img" 
-                        style={{ width: "100px", height: "100px" }} 
+                        style={{ position: 'absolute', top: '175px', right: '395px', width: "110px", height: "110px" }} 
                     />
-                    <p>Temperature: {weather.main.temp}°</p>
-                    <p>Humidity: {weather.main.humidity}%</p>
-                    <p>Wind: {weather.wind.speed} mph</p>
-                    <p>Conditions: {weather.weather[0].description}</p>
-                    <p>Feels like: {weather.main.feels_like}°</p>
-                    <p>High: {weather.main.temp_max}°</p>
-                    <p>Low: {weather.main.temp_min}°</p>
-                    <p>Pressure: {weather.main.pressure} hPa</p>
-                    <p>Visibility: {weather.visibility} miles</p>
+                    
+                    <div className={"weathInfo"}><b>Conditions:</b> {weather.weather[0].description}</div>
+
+                    <div style={{position: 'absolute', top: '640px', left: '615px'}} className={"weathInfo"}><b>Temperature:</b> {weather.main.temp}°</div>
+                    <div style={{position: 'absolute', top: '700px', left: '615px'}} className={"weathInfo"}><b>Feels like:</b> {weather.main.feels_like}°</div>
+                    <div style={{position: 'absolute', top: '760px', left: '615px'}} className={"weathInfo"}><b>High:</b> {weather.main.temp_max}°</div>
+                    <div style={{position: 'absolute', top: '820px', left: '615px'}} className={"weathInfo"}><b>Low:</b> {weather.main.temp_min}°</div>
+
+                    <div style={{position: 'absolute', top: '640px', left: '1000px'}} className={"weathInfo"}><b>Humidity:</b> {weather.main.humidity}%</div>
+                    <div style={{position: 'absolute', top: '700px', left: '1000px'}} className={"weathInfo"}><b>Wind:</b> {weather.wind.speed} mph</div>
+                    <div style={{position: 'absolute', top: '760px', left: '1000px'}} className={"weathInfo"}><b>Pressure:</b> {weather.main.pressure} hPa</div>
+                    <div style={{position: 'absolute', top: '820px', left: '1000px'}} className={"weathInfo"}><b>Visibility:</b> {weather.visibility} miles</div>
                 </div>
             )}
             
             {astronomyData ? (
-                <div>
-                    <p>UV Index: {astronomyData.uvIndex}</p>
-                    <p>Sunrise: {astronomyData.sunrise} | Sunset: {astronomyData.sunset} | Moon Phase: {getMoonPhase(astronomyData.moonphase)}</p>
+                <div className={"weathCont"}>
+                    <div style={{position: 'absolute', top: '640px', right: '150px'}} className={"weathInfo"}><b>UV Index:</b> {astronomyData.uvIndex}</div>
+                    <div style={{position: 'absolute', top: '700px', right: '150px'}} className={"weathInfo"}><b>Sunrise:</b> {astronomyData.sunrise}</div>
+                    <div style={{position: 'absolute', top: '760px', right: '150px'}} className={"weathInfo"}><b>Sunset:</b> {astronomyData.sunset}</div>
+                    <div style={{position: 'absolute', top: '820px', right: '150px'}} className={"weathInfo"}><b>Moon Phase:</b> {getMoonPhase(astronomyData.moonphase)}</div>
                 </div>
             ) : (
                 <p>Loading astronomy data...</p>

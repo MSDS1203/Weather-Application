@@ -1,0 +1,95 @@
+body {
+    display: "flex";
+    flex-direction: column;
+    height: "100vh";
+    background-color: #be9178;
+}
+
+h1 {
+    text-align: center;
+}
+
+.weathCont {
+    text-align: center;
+    height: 100%; 
+    padding: 40px;
+    background-color: #be9178;
+    justify-content: center; 
+    min-height: 60vh; 
+    align-items: center; 
+}
+.mapBox {
+    border: 2px solid #654c3f;
+    background: #daba97;
+    width: 430px;
+    height: 750px;
+}
+
+.button {
+    background-color: #daba97;
+    color: #654c3f;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border-color: #654c3f;
+    cursor: pointer;
+    font-family:'VT323';
+    font-size: 20px;
+}
+  
+.button:hover {
+    background-color: #f1e5d4;
+}
+
+.nameBox {
+    background-color: #daba97;
+    color: #654c3f;
+    padding: 10px 20px;
+    border: 2px solid #654c3f;
+    font-family:'VT323';
+    width: 300px;
+    height: 40px;
+}
+
+.weathAl {
+    background-color: #daba97;
+    color: #654c3f;
+    padding: 10px 20px;
+    border: 2px solid #654c3f;
+    font-family:'VT323';
+    font-size: 20px;
+    width: 700px;
+    height: 160px;
+}
+
+.dateTime {
+    background-color: #daba97;
+    color: #654c3f;
+    padding: 10px 20px;
+    border: 2px solid #654c3f;
+    font-family:'Silkscreen';
+    width: 200px;
+    height: 20px;
+    }
+
+.weathInfo {
+    background-color: #daba97;
+    color: #654c3f;
+    padding: 10px 20px;
+    border: 2px solid #654c3f;
+    font-family:'Silkscreen';
+    font-size: 14px;
+    width: 300px;
+    height: 20px;
+    align-content: center;
+    }
+
+.forecast {
+    background-color: #daba97;
+    color: #654c3f;
+    padding: 10px 20px;
+    border: 2px solid #654c3f;
+    font-family:'VT323';
+    font-size: 20px;
+    width: 1053px;
+    height: 290px;
+    }
