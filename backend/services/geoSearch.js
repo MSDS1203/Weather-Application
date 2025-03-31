@@ -137,7 +137,7 @@ async function getAstronomyData(location) {
 }
 
 // Get Hourly Forecast for up to the next 4 days
-async function getHourlyForecast(lat, lon, unit = 'imperial', cnt = 96) {
+async function getHourlyForecast(lat, lon, unit = 'imperial') {
     try {
         const response = await axios.get(`http://api.openweathermap.org/data/2.5/forecast/hourly`, {
             params: {
@@ -157,7 +157,7 @@ async function getHourlyForecast(lat, lon, unit = 'imperial', cnt = 96) {
 }
 
 // Get Daily Forecast for up to the next 16 days
-async function getDailyForecast(lat, lon, cnt, unit) {
+async function getDailyForecast(lat, lon, unit) {
     try {
         const response = await axios.get(`http://api.openweathermap.org/data/2.5/forecast/daily`, {
             params: {
