@@ -31,8 +31,8 @@
 /* styling for the Google Places Autocomplete dropdown */
 /* needs to be here since Google Maps API injects it into the DOM */
 .pac-container {
-  background-color: white !important;
-  border: 1px solid #41337A !important;
+  background-color: #f1e5d4 !important;
+  border: 1px solid #654c3f !important;
   border-radius: 8px !important;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2) !important;
   font-size: 16px !important;
@@ -46,14 +46,14 @@
 
 /* Highlight on hover */
 .pac-item:hover {
-  background-color: #5ad8d6 !important;
-  color: black !important;
+  background-color: #daba97 !important;
+  color: #654c3f !important;
 }
 
 /* Style the primary text (e.g., city name) */
 .pac-item .pac-item-query {
   font-weight: bold !important;
-  color: #41337A !important;
+  color: #654c3f !important;
 }
 
 /* Hide unnecessary icons (optional) */
@@ -69,3 +69,5 @@
     transform: rotate(360deg);
   }
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen:wght@400;700&family=VT323&display=swap');

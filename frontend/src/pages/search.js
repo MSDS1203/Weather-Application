@@ -2,11 +2,15 @@ import React, { useState } from "react";
 import { useNavigate, Link } from 'react-router-dom';
 import "./search.css";
 import SearchBar from "../components/SearchBar.js";
+import { getStoredUnitChoice, toggleUnitChoice } from "../utils.js";
 
 const Search = () => {
     // State to hold the location data. Not necessary but keeping for possible future use.
     const [locationData, setLocationData] = useState(null);
     const navigate = useNavigate();
+
+    // Load unit preference from localStorage
+    const [isMetric, setIsMetric] = useState(getStoredUnitChoice());
 
     const handleSelectLocation = (data) => {
         setLocationData(data); // Set the location data from the search bar
@@ -17,7 +21,7 @@ const Search = () => {
     };
 
     return (
-        <div>
+        <div className = {"searchCont"}>
             <div>
                 <Link to="/saved"><button style={{
                     position: 'absolute',
@@ -27,14 +31,14 @@ const Search = () => {
                     width: '210px'
                 }}
                 className={"button"}>SAVED LOCATIONS</button></Link>
-                <button style={{
+                <button onClick={() => toggleUnitChoice(setIsMetric)} style={{
                     position: 'absolute',
                     top: '28%',
                     right: '21%',
                     padding: '10px',
                     width: '210px'
                 }}
-                className={"button"}>FAHRENHEIT / CELSIUS</button>
+                className={"button"}>{isMetric ? "SWITCH TO IMPERIAL" : "SWITCH TO METRIC"}</button>
             </div>
             <div className="container">
                 <SearchBar onSelect={handleSelectLocation} /> {/* Pass handleSelectLocation to SearchBar */}

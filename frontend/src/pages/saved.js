@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from 'react-router-dom';
+import { data, Link } from 'react-router-dom';
 import WeatherDisplay from "../components/WeatherDisplay";
 import './saved.css';
 import image from './wi-day-sunny.svg';
+import { getStoredUnitChoice, toggleUnitChoice } from "../utils.js";
 
 const Saved = () => {
     // Convert locations to a state variable
     const [locations, setLocations] = useState({});
+    const [lowOb, setLowOb] = useState(0);
+    const [highOb, setHighOb] = useState(3);
+
+    // Load unit preference from localStorage
+    const [isMetric, setIsMetric] = useState(getStoredUnitChoice());
 
     // Fetch saved locations from the server when the component mounts
     useEffect(() => {
@@ -34,44 +40,78 @@ const Saved = () => {
         fetchSavedLocations();
     }, []);
 
-    // Function to unsave a location
-    const unsaveLocation = (key) => {
-        // Create a copy of the locations object
-        const updatedLocations = { ...locations };
-        // Remove the location with the given key
-        delete updatedLocations[key];
-        // Update the state with the new locations object
-        setLocations(updatedLocations);
+    const unsaveLocation = async (key) => {
+        try {
+            const response = await axios.delete(`/delete-location/${encodeURIComponent(key)}`);
+            
+            if (response.status === 200) {
+                console.log("Successfully deleted:", key);
+    
+                setLocations(prevLocations => {
+                    const updatedLocations = { ...prevLocations };
+                    delete updatedLocations[key];
+                    return updatedLocations;
+                });
+            } else {
+                console.warn("Deletion failed:", response.data);
+            }
+        } catch (error) {
+            console.error("Error unsaving location:", error);
+        }
     };
+    
+
+    const handlePrev = () => {
+        setLowOb(lowOb-3);
+        setHighOb(highOb-3);
+    }
+
+    const handleNext = () => {
+        setLowOb(lowOb+3);
+        setHighOb(highOb+3);
+    }
 
     return (
-        <div className={"container"}>
-            <Link to="/search"><button style={{
+        <div className={"savedCont"}>
+            <Link to="/"><button style={{
                 position: 'absolute',
                 top: '5%',
                 right: '5%',
-                padding: '10px',
                 width: '210px'
             }}
             className={"button"}>BACK</button></Link>
-            {Object.entries(locations).map(([location, values]) => (
-                <div key={location} className = "savedLoc">
-                    <p style={{fontSize: "40px", fontWeight: '500', marginBottom: '-15px'}}>{values.location}</p>
-                    <WeatherDisplay lat={values.latitude} lon={values.longitude} />
+            <button onClick={() => toggleUnitChoice(setIsMetric)} className={"button"} style={{
+                position: 'absolute',
+                top: '5%',
+                right: '20%',
+                width: '210px'
+            }}>{isMetric ? "SWITCH TO IMPERIAL" : "SWITCH TO METRIC"}</button>
+            <button onClick = {handlePrev} className={'nextButton'} disabled = {lowOb === 0} style = {{
+                position: 'absolute',
+                left: '1%'
+            }}>PREV</button>
+            {Object.entries(locations).slice(lowOb, highOb).map(([location, values]) => (
+                <div key={location} className = {"savedLoc"}>
+                    <p style={{fontFamily: "VT323", fontSize: "28px", fontWeight: '500', marginTop: '60px', marginBottom: '-15px'}}><b>{values.location}</b></p>
+                    <WeatherDisplay lat={values.latitude} lon={values.longitude} isMetric={isMetric} />
                     <button onClick={() => unsaveLocation(location)} style= {{
                         position: "relative",
-                        top: "-92%",
-                        left: "-41.5%"
+                        top: "-565px",
+                        left: "-160px"
                         }} className={"removeLoc"}>X</button>
                     <img src={image} alt="placeholder" style={{
                         position: "relative",
                         width: '80px',
                         height: '80px',
-                        top: '-97.5%',
-                        left: '-58%'
-                        }} />
+                        top: '-615px',
+                        left: '-223px'
+                    }} />
                 </div>
             ))}
+            <button onClick = {handleNext} className={'nextButton'} disabled = {highOb >= Object.keys(locations).length} style = {{
+                position: 'absolute',
+                right: '5%'
+            }}>NEXT</button>
         </div>
     );
 };

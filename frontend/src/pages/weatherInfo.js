@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import styles from "./WeatherDisplay.module.css";
+import { getStoredUnitChoice, toggleUnitChoice } from "../utils.js";
 import ForecastTabs from "../components/ForecastTabs";
 
 const VC_API_KEY = process.env.REACT_APP_VISUAL_CROSSING_API_KEY;
@@ -14,7 +15,9 @@ const WeatherInfo = () => {
     const [astronomyData, setAstronomyData] = useState(null);
     const [hourlyForecast, setHourlyForecast] = useState([]);
     const [dailyForecast, setDailyForecast] = useState([]);
+    const [buttonText, setButtonText] = useState('Save Location');
     const [error, setError] = useState(null);
+    const [isMetric, setIsMetric] = useState(getStoredUnitChoice()); // load unit preference from localStorage
     const containerStyle = {
         width: "60%",
         height: "400px",
@@ -23,6 +26,26 @@ const WeatherInfo = () => {
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: GOOGLE_API_KEY,
     });
+
+    // Check if the location is currently saved
+    useEffect(() => {
+        const checkLocation = async () => {
+            try {
+                const response = await fetch(`/is-saved?location=${location}`);
+                const data = await response.json();
+
+                if (data){
+                    setButtonText('Un-save Location');
+                } else{
+                    setButtonText('Save Location');
+                }
+
+            } catch (err) {
+                console.error("Error checking location:", err);
+            }
+        };
+        checkLocation();
+    }, [location]);
 
     useEffect(() => {
         const fetchAstronomyData = async () => {
@@ -97,30 +120,54 @@ const WeatherInfo = () => {
         if (phase > 0.75 && phase <= 1) return "Waning Crescent";
         return "Unknown Phase";
     };
-
-
+        
     const saveLocation = async () => {
-        try {
-            const response = await fetch('/save-location', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    location: decodeURIComponent(location),
-                    lat,
-                    lon
-                }),
-            });
+        if(buttonText === 'Save Location') {
+            setButtonText('Un-save Location');
 
-            if (!response.ok) {
-                throw new Error('Failed to save location');
+            try {
+                const response = await fetch('/save-location', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        location: decodeURIComponent(location),
+                        lat,
+                        lon
+                    }),
+                });
+        
+                if (!response.ok) {
+                    throw new Error('Failed to save location');
+                }
+
+                setButtonText('Un-save Location');
+                alert('Location saved successfully');
+                
+            } catch (error) {
+                console.error('Error saving location:', error);
+                alert('Failed to save location');
             }
+        } else {
+            try{
+                const response = await fetch(`/delete-location/${encodeURIComponent(location)}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+        
+                if (!response.ok) {
+                    throw new Error('Failed to delete location');
+                }
+                alert('Location deleted successfully');
 
-            alert('Location saved successfully');
-        } catch (error) {
-            console.error('Error saving location:', error);
-            alert('Failed to save location');
+            } catch (error) {
+                console.error('Error deleting location:', error);
+                alert('Failed to delete location');
+            }
+            setButtonText('Save Location');
         }
     };
 
