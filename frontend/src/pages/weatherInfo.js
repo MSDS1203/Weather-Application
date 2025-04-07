@@ -71,6 +71,12 @@ const WeatherInfo = () => {
                 if (!response.ok) throw new Error("Failed to fetch weather data");
 
                 const data = await response.json();
+                const timezone_offset = data["timezone"];
+                const utc_timestamp = data["dt"]
+                const local_timestamp = utc_timestamp + timezone_offset
+                const localDate = new Date(local_timestamp * 1000);
+
+                console.log(localDate)
                 setWeather(data);
             } catch (err) {
                 setError(err.message);
