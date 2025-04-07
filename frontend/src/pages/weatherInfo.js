@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
-import styles from "./WeatherDisplay.module.css"; 
+import styles from "./WeatherDisplay.module.css";
+import { getStoredUnitChoice, toggleUnitChoice } from "../utils.js";
+import ForecastTabs from "../components/ForecastTabs";
 
 const VC_API_KEY = process.env.REACT_APP_VISUAL_CROSSING_API_KEY;
 const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
@@ -11,14 +13,17 @@ const WeatherInfo = () => {
     const [weather, setWeather] = useState(null);
     const [loading, setLoading] = useState(false);
     const [astronomyData, setAstronomyData] = useState(null);
+    const [hourlyForecast, setHourlyForecast] = useState([]);
+    const [dailyForecast, setDailyForecast] = useState([]);
     const [buttonText, setButtonText] = useState('Save Location');
     const [error, setError] = useState(null);
+    const [isMetric, setIsMetric] = useState(getStoredUnitChoice()); // load unit preference from localStorage
     const containerStyle = {
         width: "60%",
         height: "400px",
-      };      
+    };
 
-      const { isLoaded } = useJsApiLoader({
+    const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: GOOGLE_API_KEY,
     });
 
@@ -87,6 +92,28 @@ const WeatherInfo = () => {
 
         getWeather();
     }, [lat, lon]);
+
+    useEffect(() => {
+        const fetchForecasts = async () => {
+            try {
+                const resHourly = await fetch(`/forecast/hourly?lat=${lat}&lon=${lon}`);
+                const resDaily = await fetch(`/forecast/daily?lat=${lat}&lon=${lon}`);
+
+                if (!resHourly.ok || !resDaily.ok) throw new Error("Failed to fetch forecast data");
+
+                const hourlyData = await resHourly.json();
+                const dailyData = await resDaily.json();
+
+                setHourlyForecast(hourlyData.list.slice(0, 96));
+                setDailyForecast(dailyData.list.slice(0, 16));
+            } catch (err) {
+                setError(err.message);
+            }
+        };
+
+        fetchForecasts();
+    }, [lat, lon]);
+
 
     const getMoonPhase = (phase) => {
         if (phase === 0) return "New Moon";
@@ -158,14 +185,13 @@ const WeatherInfo = () => {
             {weather && (
                 <div>
                     <h3>Weather in {decodeURIComponent(location)}</h3>
-                    
-                    <button onClick={saveLocation}>{buttonText}</button>
-                    
+                    <button onClick={saveLocation}>Save Location</button>
+
                     {isLoaded && (
                         <div className={styles.mapContainer}>
-                            <GoogleMap 
-                                mapContainerStyle={containerStyle} 
-                                center={{ lat: parseFloat(lat), lng: parseFloat(lon) }} 
+                            <GoogleMap
+                                mapContainerStyle={containerStyle}
+                                center={{ lat: parseFloat(lat), lng: parseFloat(lon) }}
                                 zoom={12}
                             >
                                 <Marker position={{ lat: parseFloat(lat), lng: parseFloat(lon) }} />
@@ -173,10 +199,10 @@ const WeatherInfo = () => {
                         </div>
                     )}
 
-                    <img 
-                        src={`http://openweathermap.org/img/w/${weather.weather[0].icon}.png`} 
-                        alt="wthr img" 
-                        style={{ width: "100px", height: "100px" }} 
+                    <img
+                        src={`http://openweathermap.org/img/w/${weather.weather[0].icon}.png`}
+                        alt="wthr img"
+                        style={{ width: "100px", height: "100px" }}
                     />
                     <p>Temperature: {weather.main.temp}°</p>
                     <p>Humidity: {weather.main.humidity}%</p>
@@ -189,7 +215,7 @@ const WeatherInfo = () => {
                     <p>Visibility: {weather.visibility} miles</p>
                 </div>
             )}
-            
+
             {astronomyData ? (
                 <div>
                     <p>UV Index: {astronomyData.uvIndex}</p>
@@ -198,6 +224,8 @@ const WeatherInfo = () => {
             ) : (
                 <p>Loading astronomy data...</p>
             )}
+            
+            <ForecastTabs hourlyForecast={hourlyForecast} dailyForecast={dailyForecast} />
         </div>
 
     );
