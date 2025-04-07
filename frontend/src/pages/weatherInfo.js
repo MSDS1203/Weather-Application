@@ -76,12 +76,24 @@ const WeatherInfo = () => {
                 if (!response.ok) throw new Error("Failed to fetch weather data");
 
                 const data = await response.json();
-                const timezone_offset = data["timezone"];
-                const utc_timestamp = data["dt"]
-                const local_timestamp = utc_timestamp + timezone_offset
-                const localDate = new Date(local_timestamp * 1000);
 
-                console.log(localDate)
+                const utcTimestamp = data.dt * 1000; 
+                const timezoneOffsetMs = data.timezone * 1000; 
+                const localTime = new Date(utcTimestamp + timezoneOffsetMs);
+
+                const options = {
+                timeZone: 'UTC', // Force UTC to avoid browser interference
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+                };
+
+                console.log("Correct Local Time:", localTime.toLocaleString('en-US', options));
+
                 setWeather(data);
             } catch (err) {
                 setError(err.message);
