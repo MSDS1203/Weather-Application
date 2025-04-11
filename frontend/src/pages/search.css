@@ -14,7 +14,7 @@ body {
   flex-direction: column;
   justify-content: center; 
   min-height: 60vh; 
-  align-items: center; 
+  align-items: center;
 }
   
 .inputContainer {
@@ -82,6 +82,7 @@ li {
   cursor: pointer;
   font-family:'VT323';
   font-size: 20px;
+  width: 210px;
 }
 
 .button:hover {
