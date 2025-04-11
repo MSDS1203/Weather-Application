@@ -23,22 +23,10 @@ const Search = () => {
     return (
         <div className = {"searchCont"}>
             <div>
-                <Link to="/saved"><button style={{
-                    position: 'absolute',
-                    top: '23%',
-                    right: '21%',
-                    padding: '10px',
-                    width: '210px'
-                }} className={"button"}>SAVED LOCATIONS</button></Link>
-                <button onClick={() => toggleUnitChoice(setIsMetric)} style={{
-                    position: 'absolute',
-                    top: '28%',
-                    right: '21%',
-                    padding: '10px',
-                    width: '210px'
-                }}
-                className={"button"}>{isMetric ? "SWITCH TO IMPERIAL" : "SWITCH TO METRIC"}</button>
+                <Link to="/saved"><button style={{position: 'absolute', top: '23%', right: '21%', padding: '10px'}} className={"button"}>SAVED LOCATIONS</button></Link>
+                <button onClick={() => toggleUnitChoice(setIsMetric)} style={{position: 'absolute', top: '28%', right: '21%', padding: '10px'}} className={"button"}>{isMetric ? "SWITCH TO IMPERIAL" : "SWITCH TO METRIC"}</button>
             </div>
+            
             <div className="container">
                 <SearchBar onSelect={handleSelectLocation} /> {/* Pass handleSelectLocation to SearchBar */}
             </div>

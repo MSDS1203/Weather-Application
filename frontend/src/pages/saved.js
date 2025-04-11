@@ -72,39 +72,19 @@ const Saved = () => {
 
     return (
         <div className={"savedCont"}>
-            <Link to="/"><button style={{
-                position: 'absolute',
-                top: '5%',
-                right: '5%',
-                width: '210px'
-            }}
-            className={"button"}>BACK</button></Link>
-            <button onClick={() => toggleUnitChoice(setIsMetric)} className={"button"} style={{
-                position: 'absolute',
-                top: '5%',
-                right: '20%',
-                width: '210px'
-            }}>{isMetric ? "SWITCH TO IMPERIAL" : "SWITCH TO METRIC"}</button>
-            <button onClick = {handlePrev} className={'nextButton'} disabled = {lowOb === 0} style = {{
-                position: 'absolute',
-                left: '1%'
-            }}>PREV</button>
+            <Link to="/"><button style={{position: 'absolute', top: '5%', right: '5%'}} className={"button"}>BACK</button></Link>
+            <button onClick={() => toggleUnitChoice(setIsMetric)} style={{position: 'absolute', top: '5%', right: '20%'}} className={"button"}>{isMetric ? "SWITCH TO IMPERIAL" : "SWITCH TO METRIC"}</button>
+            <button onClick = {handlePrev} className={'nextButton'} disabled = {lowOb === 0} style = {{position: 'absolute', left: '1%'}}>PREV</button>
+            <button onClick = {handleNext} className={'nextButton'} disabled = {highOb >= Object.keys(locations).length} style = {{position: 'absolute', right: '5%'}}>NEXT</button>
+
             {Object.entries(locations).slice(lowOb, highOb).map(([location, values]) => (
                 <button key={location} className = {"savedLoc"}>
                     <p style={{fontFamily: "VT323", fontSize: "28px", fontWeight: '500', marginTop: '60px', marginBottom: '-15px'}}><b>{values.location}</b></p>
                     <WeatherDisplay lat={values.latitude} lon={values.longitude} isMetric={isMetric} />
-                    <button onClick={() => unsaveLocation(location)} style= {{
-                        position: "relative",
-                        top: "-565px",
-                        left: "-160px"
-                        }} className={"removeLoc"}>X</button>
+                    <button onClick={() => unsaveLocation(location)} style= {{position: "relative", top: "-565px", left: "-160px"}} className={"removeLoc"}>X</button>
                     <img src={image} alt="placeholder" style={{position: "relative", width: '80px', height: '80px', top: '-615px', left: '-223px'}} />
                 </button>
             ))}
-            <button onClick = {handleNext} className={'nextButton'} disabled = {highOb >= Object.keys(locations).length} style = {{
-                position: 'absolute',
-                right: '5%'
-            }}>NEXT</button>
         </div>
     );
 };

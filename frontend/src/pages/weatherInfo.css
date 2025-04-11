@@ -2,6 +2,7 @@ body {
     display: "flex";
     flex-direction: column;
     height: "100vh";
+    overflow-y: hidden;
     background-color: #be9178;
 }
 
@@ -34,6 +35,7 @@ h1 {
     cursor: pointer;
     font-family:'VT323';
     font-size: 20px;
+    width: 210px;
 }
   
 .button:hover {
@@ -46,6 +48,7 @@ h1 {
     padding: 10px 20px;
     border: 2px solid #654c3f;
     font-family:'VT323';
+    font-size: 32px;
     width: 300px;
     height: 40px;
 }
@@ -55,21 +58,29 @@ h1 {
     color: #654c3f;
     padding: 10px 20px;
     border: 2px solid #654c3f;
-    font-family:'VT323';
-    font-size: 20px;
     width: 700px;
-    height: 160px;
+    height: 165px;
 }
 
-.dateTime {
+.dtCont {
     background-color: #daba97;
     color: #654c3f;
     padding: 10px 20px;
     border: 2px solid #654c3f;
+    width: 210px;
+    height: 95px;
+}
+
+.dateTime {
+    background-color: #f1e5d4;
+    color: #654c3f;
+    padding: 10px 20px;
+    border: 2px solid #654c3f;
     font-family:'Silkscreen';
-    width: 200px;
+    font-size: 18px;
+    width: 165px;
     height: 20px;
-    }
+}
 
 .weathInfo {
     background-color: #daba97;
@@ -81,15 +92,40 @@ h1 {
     width: 300px;
     height: 20px;
     align-content: center;
-    }
+}
+
+.condInfo {
+    background-color: #daba97;
+    color: #654c3f;
+    padding: 10px 20px;
+    border: 2px solid #654c3f;
+    font-family:'Silkscreen';
+    font-size: 30px;
+    width: 1535px;
+    height: 40px;
+    align-content: center;
+}
 
 .forecast {
+    display: "flex";
+    flex-direction: row;
     background-color: #daba97;
+    color: #654c3f;
+    padding: 10px 20px;
+    border: 2px solid #654c3f;
+    width: 1070px;
+    height: 290px;
+}
+
+.foreBox {
+    background-color: #f1e5d4;
     color: #654c3f;
     padding: 10px 20px;
     border: 2px solid #654c3f;
     font-family:'VT323';
     font-size: 20px;
-    width: 1053px;
-    height: 290px;
-    }
+    width: 98.85px;
+    height: 180px;
+    margin-top: 80px;
+    margin-right: 10px;
+}
