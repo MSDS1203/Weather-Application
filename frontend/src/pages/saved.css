@@ -27,12 +27,18 @@ h1 {
     text-align: center;
     border: 2px solid #654c3f;
     background: #daba97;
+    color: #463329;
     width: 380px;
     height: 750px;
     margin-top: 55px;
     margin-left: 80px;
     margin-right: 15px;
     font-size: 15px;
+    cursor: pointer;
+}
+
+.savedLoc:hover {
+    background-color: #f1e5d4;
 }
 
 .button {
@@ -44,6 +50,7 @@ h1 {
     cursor: pointer;
     font-family:'VT323';
     font-size: 20px;
+    width: 210px;
 }
   
 .button:hover {
@@ -54,8 +61,6 @@ h1 {
     background-color: #f1e5d4;
     color: #654c3f;
     padding: 5px 5px;
-    width: 50px;
-    height: 50px;
     border: 5px solid #654c3f;
     border-radius: 8px;
     font-size: 30px;
@@ -63,6 +68,8 @@ h1 {
     cursor: pointer;
     font-family:'Silkscreen';
     font-size: 20px;
+    width: 50px;
+    height: 50px;
 }
 
 .removeLoc:hover {
@@ -75,7 +82,6 @@ h1 {
     background-color: #daba97;
     color: #654c3f;
     padding: 10px 20px;
-    height: 750px;
     border: 2px solid #654c3f;
     border-radius: 10px;
     margin-top: 55px;
@@ -84,6 +90,7 @@ h1 {
     cursor: pointer;
     font-family:'VT323';
     font-size: 20px;
+    height: 750px;
 }
 
 .nextButton:hover {
