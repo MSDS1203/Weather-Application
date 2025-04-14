@@ -23,8 +23,6 @@ const WeatherMap = ({ lat, lon }) => {
                 const response = await fetch("https://api.rainviewer.com/public/weather-maps.json");
                 const data = await response.json();
                 const latestTime = data.radar.nowcast[0]; // latest radar timestamp
-                console.log("Latest radar time:", latestTime);
-                console.log('Host: ', data.host);
                 setRadarTime(latestTime);
             } catch (error) {
                 console.error("Error fetching radar time:", error);
@@ -36,13 +34,10 @@ const WeatherMap = ({ lat, lon }) => {
 
      // Add radar layer to map when both radarTime and mapInstance are available
      useEffect(() => {
-        console.log("useEffect triggered: mapInstance =", mapInstance, "radarTime =", radarTime);
         if (mapInstance && radarTime) {
-            console.log("Adding radar layer to map");
             const radarLayer = new window.google.maps.ImageMapType({
                 getTileUrl: (coord, zoom) => {
                     const url = `https://tilecache.rainviewer.com${radarTime.path}/${256}/${zoom}/${coord.x}/${coord.y}/1/1_0.png`;
-                    console.log("Radar Tile URL:", url);
                     return url;
                 },
                 tileSize: new window.google.maps.Size(256, 256),
@@ -51,7 +46,6 @@ const WeatherMap = ({ lat, lon }) => {
             });
 
             mapInstance.overlayMapTypes.insertAt(0, radarLayer);
-            console.log("Radar layer added to map");
         }
     }, [mapInstance, radarTime]);
 
@@ -66,7 +60,6 @@ const WeatherMap = ({ lat, lon }) => {
                 mapTypeId: "roadmap",
             }}
             onLoad={(map) => {
-                console.log("Map loaded:", map);
                 setMapInstance(map);
             }}
         >
