@@ -5,6 +5,7 @@ const WeatherDisplay = ({ lat, lon, isMetric }) => {
     const [weather, setWeather] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [officialTime, setOfficialTime] = useState(null);
 
     useEffect(() => {
         const fetchWeather = async () => {
@@ -13,7 +14,25 @@ const WeatherDisplay = ({ lat, lon, isMetric }) => {
                 if (!response.ok) throw new Error("Failed to fetch weather data");
                 
                 const data = await response.json();
+                const utcTimestamp = data.dt * 1000; 
+                const timezoneOffsetMs = data.timezone * 1000; 
+                const localTime = new Date(utcTimestamp + timezoneOffsetMs);
+
+                const options = {
+                timeZone: 'UTC', // Force UTC to avoid browser interference
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+                };
+
+                const officialTime = localTime.toLocaleString('en-US', options);
+
                 setWeather(data);
+                setOfficialTime(officialTime);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -34,7 +53,7 @@ const WeatherDisplay = ({ lat, lon, isMetric }) => {
 
     return (
         <div>
-            <p style={{fontFamily: "Silkscreen", fontSize: "15px", textTransform: "uppercase"}}>12:00 AM - MONDAY</p>
+            <p style={{fontFamily: "Silkscreen", fontSize: "15px", textTransform: "uppercase"}}>{ officialTime }</p>
             <p></p>
             <p style={{fontFamily: "Silkscreen", fontSize: '25px', textTransform: 'uppercase'}}>{weather.weather[0].description}</p>
             <p style={{fontFamily: "VT323", fontSize: '75px'}}><b>{temp.toFixed(1)}</b>{isMetric ? '°C' : '°F'}</p>
