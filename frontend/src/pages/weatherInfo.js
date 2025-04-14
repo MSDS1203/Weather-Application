@@ -187,6 +187,9 @@ const WeatherInfo = () => {
                     <Link to="/"><button style={{position: 'absolute', bottom: '5%', right: '5%'}} className={"button"}>SEARCH</button></Link>
                     <Link to="/saved"><button style={{position: 'absolute', bottom: '5%', right: '17.5%'}} className={"button"}>SAVED LOCATIONS</button></Link>
                     <button style={{position: 'absolute', bottom: '5%', right: '30%'}} className={"button"} onClick={saveLocation}>SAVE THIS LOCATION</button>
+                    <button onClick={() => toggleUnitChoice(setIsMetric)} style={{position: 'absolute', bottom: '5%', right: '42.5%'}} className={"button"}>
+                        {isMetric ? "SWITCH TO IMPERIAL" : "SWITCH TO METRIC"}
+                    </button>
                     
                     {isLoaded && (
                         <div style={{position: 'absolute', top: '110px', left: '150px'}} className={"mapBox"}>
@@ -226,15 +229,27 @@ const WeatherInfo = () => {
                     
                     <div style={{position: 'absolute', top: '30px', left: '150px'}} className={"condInfo"}><b>{weather.weather[0].description}</b></div>
 
-                    <div style={{position: 'absolute', top: '640px', left: '615px'}} className={"weathInfo"}><b>Temperature:</b> {weather.main.temp}°</div>
-                    <div style={{position: 'absolute', top: '700px', left: '615px'}} className={"weathInfo"}><b>Feels like:</b> {weather.main.feels_like}°</div>
-                    <div style={{position: 'absolute', top: '760px', left: '615px'}} className={"weathInfo"}><b>High:</b> {weather.main.temp_max}°</div>
-                    <div style={{position: 'absolute', top: '820px', left: '615px'}} className={"weathInfo"}><b>Low:</b> {weather.main.temp_min}°</div>
+                    <div style={{position: 'absolute', top: '640px', left: '615px'}} className={"weathInfo"}>
+                        <b>Temperature:</b> {(isMetric ? (weather.main.temp - 32) * (5 / 9) : weather.main.temp).toFixed(1)}°{isMetric ? 'C' : 'F'}
+                    </div>
+                    <div style={{position: 'absolute', top: '700px', left: '615px'}} className={"weathInfo"}>
+                        <b>Feels like:</b> {(isMetric ? (weather.main.feels_like - 32) * (5 / 9) : weather.main.feels_like).toFixed(1)}°{isMetric ? 'C' : 'F'}
+                    </div>
+                    <div style={{position: 'absolute', top: '760px', left: '615px'}} className={"weathInfo"}>
+                        <b>High:</b> {(isMetric ? (weather.main.temp_max - 32) * (5 / 9) : weather.main.temp_max).toFixed(1)}°{isMetric ? 'C' : 'F'}
+                    </div>
+                    <div style={{position: 'absolute', top: '820px', left: '615px'}} className={"weathInfo"}>
+                        <b>Low:</b> {(isMetric ? (weather.main.temp_min - 32) * (5 / 9) : weather.main.temp_min).toFixed(1)}°{isMetric ? 'C' : 'F'}
+                    </div>
 
                     <div style={{position: 'absolute', top: '640px', left: '1000px'}} className={"weathInfo"}><b>Humidity:</b> {weather.main.humidity}%</div>
-                    <div style={{position: 'absolute', top: '700px', left: '1000px'}} className={"weathInfo"}><b>Wind:</b> {weather.wind.speed} mph</div>
+                    <div style={{position: 'absolute', top: '700px', left: '1000px'}} className={"weathInfo"}>
+                        <b>Wind:</b> {(isMetric ? weather.wind.speed * 0.44704 : weather.wind.speed).toFixed(1)} {isMetric ? 'm/s' : 'mph'}
+                    </div>
                     <div style={{position: 'absolute', top: '760px', left: '1000px'}} className={"weathInfo"}><b>Pressure:</b> {weather.main.pressure} hPa</div>
-                    <div style={{position: 'absolute', top: '820px', left: '1000px'}} className={"weathInfo"}><b>Visibility:</b> {weather.visibility} miles</div>
+                    <div style={{position: 'absolute', top: '820px', left: '1000px'}} className={"weathInfo"}>
+                        <b>Visibility:</b> {(isMetric ? weather.visibility * 0.621371 : weather.visibility).toFixed(1)} {isMetric ? 'kilometers' : 'miles'}
+                    </div>
                 </div>
             )}
 
