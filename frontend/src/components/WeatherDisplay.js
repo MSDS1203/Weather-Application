@@ -30,6 +30,8 @@ const WeatherDisplay = ({ lat, lon, isMetric }) => {
     // Conversions if isMetric is true
     const temp = isMetric ? (weather.main.temp - 32) * (5 / 9) : weather.main.temp; // Convert °F to °C
     const feelsLike = isMetric ? (weather.main.feels_like - 32) * (5 / 9) : weather.main.feels_like; // Convert °F to °C
+    const high = isMetric ? (weather.main.temp_max - 32) * (5 / 9) : weather.main.temp_max; // Convert °F to °C
+    const low = isMetric ? (weather.main.temp_min - 32) * (5 / 9) : weather.main.temp_min; // Convert °F to °C
     const windSpeed = isMetric ? weather.wind.speed * 0.44704 : weather.wind.speed; // Convert mph to m/s
 
     return (
@@ -38,8 +40,8 @@ const WeatherDisplay = ({ lat, lon, isMetric }) => {
             <p></p>
             <p style={{fontFamily: "Silkscreen", fontSize: '25px', textTransform: 'uppercase'}}>{weather.weather[0].description}</p>
             <p style={{fontFamily: "VT323", fontSize: '75px'}}><b>{temp.toFixed(1)}</b>{isMetric ? '°C' : '°F'}</p>
-            <p style={{fontFamily: "Silkscreen", marginTop: '-60px', marginLeft: '-150px'}}><b>High:</b> text</p>
-            <p style={{fontFamily: "Silkscreen", marginTop: '-34px', marginLeft: '150px'}}><b>Low:</b> text</p>
+            <p style={{fontFamily: "Silkscreen", marginTop: '-60px', marginLeft: '-150px'}}><b>High:</b> {high.toFixed(1)}{isMetric ? '°C' : '°F'}</p>
+            <p style={{fontFamily: "Silkscreen", marginTop: '-34px', marginLeft: '150px'}}><b>Low:</b> {low.toFixed(1)}{isMetric ? '°C' : '°F'}</p>
             <p style={{fontFamily: "Silkscreen", }}><b>Feels like:</b> {feelsLike.toFixed(1)}{isMetric ? '°C' : '°F'}</p>
             <p style={{fontFamily: "Silkscreen", marginTop: '120px'}}><b>Humidity:</b> {weather.main.humidity}%</p>
             <p style={{fontFamily: "Silkscreen", }}><b>Wind Speed:</b> {windSpeed.toFixed(1)}{isMetric ? 'm/s' : 'mph'}</p>

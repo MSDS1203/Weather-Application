@@ -68,8 +68,8 @@ const ForecastTabs = ({ hourlyForecast, dailyForecast }) => {
                                 src={`http://openweathermap.org/img/w/${day.weather[0].icon}.png`}
                                 alt="weather icon"
                             />
-                            <p>High: {day.temp.max}°F</p>
-                            <p>Low: {day.temp.min}°F</p>
+                            <p>High: {day.temp_max}°F</p>
+                            <p>Low: {day.temp_min}°F</p>
                             <p>{day.weather[0].description}</p>
                         </div>
                     ))}
