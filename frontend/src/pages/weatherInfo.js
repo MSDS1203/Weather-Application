@@ -4,6 +4,7 @@ import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import "./weatherInfo.css";
 import { getStoredUnitChoice, toggleUnitChoice } from "../utils.js";
 import ForecastTabs from "../components/ForecastTabs";
+import WeatherMap from "../components/WeatherMap";
 
 const VC_API_KEY = process.env.REACT_APP_VISUAL_CROSSING_API_KEY;
 const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
@@ -108,7 +109,6 @@ const WeatherInfo = () => {
         fetchForecasts();
     }, [lat, lon]);
 
-
     const getMoonPhase = (phase) => {
         if (phase === 0) return "New Moon";
         if (phase > 0 && phase < 0.25) return "Waxing Crescent";
@@ -193,13 +193,7 @@ const WeatherInfo = () => {
                     
                     {isLoaded && (
                         <div style={{position: 'absolute', top: '110px', left: '150px'}} className={"mapBox"}>
-                            <GoogleMap 
-                                mapContainerStyle={containerStyle} 
-                                center={{ lat: parseFloat(lat), lng: parseFloat(lon) }} 
-                                zoom={12}
-                            >
-                                <Marker position={{ lat: parseFloat(lat), lng: parseFloat(lon) }} />
-                            </GoogleMap>
+                            <WeatherMap lat={lat} lon={lon} />
                         </div>
                     )}
 
