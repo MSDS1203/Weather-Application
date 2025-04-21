@@ -12,6 +12,8 @@ const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 const WeatherInfo = () => {
     const { location, lat, lon } = useParams();
     const [weather, setWeather] = useState(null);
+    const [time, setTime] = useState(null);
+    const [currentDate, setCurrentDate] = useState(null);
     const [loading, setLoading] = useState(false);
     const [astronomyData, setAstronomyData] = useState(null);
     const [hourlyForecast, setHourlyForecast] = useState([]);
@@ -77,7 +79,27 @@ const WeatherInfo = () => {
                 if (!response.ok) throw new Error("Failed to fetch weather data");
 
                 const data = await response.json();
+
+                const utcTimestamp = data.dt * 1000; 
+                const timezoneOffsetMs = data.timezone * 1000; 
+                const localTime = new Date(utcTimestamp + timezoneOffsetMs);
+
+                const options = {
+                timeZone: 'UTC', 
+                weekday: 'short',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+                };
+
+                const splittingString = localTime.toLocaleString('en-US', options).split("at");
+                splittingString[0] = splittingString[0].replace(/,/g, '');
+
                 setWeather(data);
+                setTime(splittingString[1].trim());
+                setCurrentDate(splittingString[0].trim());
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -91,8 +113,8 @@ const WeatherInfo = () => {
     useEffect(() => {
         const fetchForecasts = async () => {
             try {
-                const resHourly = await fetch(`/forecast/hourly?lat=${lat}&lon=${lon}`);
-                const resDaily = await fetch(`/forecast/daily?lat=${lat}&lon=${lon}`);
+                const resHourly = await fetch(`/forecast?lat=${lat}&lon=${lon}`);
+                const resDaily = await fetch(`/forecast?lat=${lat}&lon=${lon}`);
 
                 if (!resHourly.ok || !resDaily.ok) throw new Error("Failed to fetch forecast data");
 
@@ -180,8 +202,8 @@ const WeatherInfo = () => {
                 <div className={"weathCont"}>
                     <div style={{position: 'absolute', top: '110px', right: '150px', alignContent: 'center'}} className={"nameBox"}>{decodeURIComponent(location)}</div>
                     <div style={{position: 'absolute', top: '180px', right: '150px'}} className={"dtCont"}>
-                        <div style={{float: 'left', alignContent: 'center'}} className={"dateTime"}>JAN - WED 22</div>
-                        <div style={{float: 'left', marginTop: '6px', alignContent: 'center'}} className={"dateTime"}>12:00 PM</div>
+                        <div style={{float: 'left', alignContent: 'center'}} className={"dateTime"}>{ currentDate }</div>
+                        <div style={{float: 'left', marginTop: '6px', alignContent: 'center'}} className={"dateTime"}>{ time }</div>
                     </div>
 
                     <Link to="/"><button style={{position: 'absolute', bottom: '5%', right: '5%'}} className={"button"}>SEARCH</button></Link>
