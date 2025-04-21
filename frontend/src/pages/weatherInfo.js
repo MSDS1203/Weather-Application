@@ -109,8 +109,8 @@ const WeatherInfo = () => {
     useEffect(() => {
         const fetchForecasts = async () => {
             try {
-                const resHourly = await fetch(`/forecast/hourly?lat=${lat}&lon=${lon}`);
-                const resDaily = await fetch(`/forecast/daily?lat=${lat}&lon=${lon}`);
+                const resHourly = await fetch(`/forecast?lat=${lat}&lon=${lon}`);
+                const resDaily = await fetch(`/forecast?lat=${lat}&lon=${lon}`);
 
                 if (!resHourly.ok || !resDaily.ok) throw new Error("Failed to fetch forecast data");
 
