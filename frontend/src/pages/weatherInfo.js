@@ -12,6 +12,8 @@ const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 const WeatherInfo = () => {
     const { location, lat, lon } = useParams();
     const [weather, setWeather] = useState(null);
+    const [time, setTime] = useState(null);
+    const [currentDate, setCurrentDate] = useState(null);
     const [loading, setLoading] = useState(false);
     const [astronomyData, setAstronomyData] = useState(null);
     const [hourlyForecast, setHourlyForecast] = useState([]);
@@ -83,9 +85,8 @@ const WeatherInfo = () => {
                 const localTime = new Date(utcTimestamp + timezoneOffsetMs);
 
                 const options = {
-                timeZone: 'UTC', // Force UTC to avoid browser interference
-                weekday: 'long',
-                year: 'numeric',
+                timeZone: 'UTC', 
+                weekday: 'short',
                 month: 'long',
                 day: 'numeric',
                 hour: '2-digit',
@@ -93,9 +94,12 @@ const WeatherInfo = () => {
                 second: '2-digit'
                 };
 
-                console.log("Correct Local Time:", localTime.toLocaleString('en-US', options));
+                const splittingString = localTime.toLocaleString('en-US', options).split("at");
+                splittingString[0] = splittingString[0].replace(/,/g, '');
 
                 setWeather(data);
+                setTime(splittingString[1].trim());
+                setCurrentDate(splittingString[0].trim());
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -198,8 +202,8 @@ const WeatherInfo = () => {
                 <div className={"weathCont"}>
                     <div style={{position: 'absolute', top: '110px', right: '150px', alignContent: 'center'}} className={"nameBox"}>{decodeURIComponent(location)}</div>
                     <div style={{position: 'absolute', top: '180px', right: '150px'}} className={"dtCont"}>
-                        <div style={{float: 'left', alignContent: 'center'}} className={"dateTime"}>JAN - WED 22</div>
-                        <div style={{float: 'left', marginTop: '6px', alignContent: 'center'}} className={"dateTime"}>12:00 PM</div>
+                        <div style={{float: 'left', alignContent: 'center'}} className={"dateTime"}>{ currentDate }</div>
+                        <div style={{float: 'left', marginTop: '6px', alignContent: 'center'}} className={"dateTime"}>{ time }</div>
                     </div>
 
                     <Link to="/"><button style={{position: 'absolute', bottom: '5%', right: '5%'}} className={"button"}>SEARCH</button></Link>
