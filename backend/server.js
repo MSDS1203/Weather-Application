@@ -107,7 +107,7 @@ app.get("/weather", async (req, res) => {
 // Route to get hourly forecast
 // URL: localhost:3001/forecast/hourly?lat=LATITUDE&lon=LONGITUDE
 app.get("/forecast/hourly", async (req, res) => {
-    const { lat, lon, unit, cnt} = req.query;
+    const { lat, lon } = req.query;
     if (!lat || !lon) return res.status(400).json({ error: "Latitude and Longitude are required" });
 
     try {
@@ -116,7 +116,7 @@ app.get("/forecast/hourly", async (req, res) => {
         if (cachedForecast) return res.json(cachedForecast);
 
         // Fetch new data from API
-        const forecast = await getHourlyForecast(lat, lon, unit, cnt);
+        const forecast = await getHourlyForecast(lat, lon);
         await saveForecastToCache(lat, lon, "hourly", forecast);
         res.json(forecast);
     } catch (error) {
