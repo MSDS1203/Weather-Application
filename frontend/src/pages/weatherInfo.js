@@ -19,10 +19,28 @@ const WeatherInfo = () => {
     const [buttonText, setButtonText] = useState('Save Location');
     const [error, setError] = useState(null);
     const [isMetric, setIsMetric] = useState(getStoredUnitChoice()); // load unit preference from localStorage
+    const [viewMode, setViewMode] = useState("hourly"); // default to hourly view
+    const [visibleIndex, setVisibleIndex] = useState(0); // default to first item in the list
+    const batchSize = 7; // number of items to show at once
     const containerStyle = {
         width: "100%",
         height: "100%",
     };
+
+    const handleNext = () => {
+        if (viewMode === "hourly" && visibleIndex + batchSize < hourlyForecast.length) {
+            setVisibleIndex(visibleIndex + batchSize);
+        } else if (viewMode === "daily" && visibleIndex + batchSize < dailyForecast.length) {
+            setVisibleIndex(visibleIndex + batchSize);
+        }
+    };
+
+    const handlePrev = () => {
+        if (visibleIndex - batchSize >= 0) {
+            setVisibleIndex(visibleIndex - batchSize);
+        }
+    };
+
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: GOOGLE_API_KEY,
@@ -35,9 +53,9 @@ const WeatherInfo = () => {
                 const response = await fetch(`/is-saved?location=${location}`);
                 const data = await response.json();
 
-                if (data){
+                if (data) {
                     setButtonText('Un-save Location');
-                } else{
+                } else {
                     setButtonText('Save Location');
                 }
 
@@ -91,8 +109,8 @@ const WeatherInfo = () => {
     useEffect(() => {
         const fetchForecasts = async () => {
             try {
-                const resHourly = await fetch(`/forecast/hourly?lat=${lat}&lon=${lon}`);
-                const resDaily = await fetch(`/forecast/daily?lat=${lat}&lon=${lon}`);
+                const resHourly = await fetch(`/forecast/hourly?lat=${lat}&lon=${lon}&units=${isMetric ? 'metric' : 'imperial'}`);
+                const resDaily = await fetch(`/forecast/daily?lat=${lat}&lon=${lon}&units=${isMetric ? 'metric' : 'imperial'}`);
 
                 if (!resHourly.ok || !resDaily.ok) throw new Error("Failed to fetch forecast data");
 
@@ -120,9 +138,9 @@ const WeatherInfo = () => {
         if (phase > 0.75 && phase <= 1) return "Waning Crescent";
         return "Unknown Phase";
     };
-        
+
     const saveLocation = async () => {
-        if(buttonText === 'Save Location') {
+        if (buttonText === 'Save Location') {
             setButtonText('Un-save Location');
 
             try {
@@ -137,27 +155,27 @@ const WeatherInfo = () => {
                         lon
                     }),
                 });
-        
+
                 if (!response.ok) {
                     throw new Error('Failed to save location');
                 }
 
                 setButtonText('Un-save Location');
                 alert('Location saved successfully');
-                
+
             } catch (error) {
                 console.error('Error saving location:', error);
                 alert('Failed to save location');
             }
         } else {
-            try{
+            try {
                 const response = await fetch(`/delete-location/${encodeURIComponent(location)}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                 });
-        
+
                 if (!response.ok) {
                     throw new Error('Failed to delete location');
                 }
@@ -178,70 +196,88 @@ const WeatherInfo = () => {
             {loading && <p>Loading...</p>}
             {weather && (
                 <div className={"weathCont"}>
-                    <div style={{position: 'absolute', top: '110px', right: '150px', alignContent: 'center'}} className={"nameBox"}>{decodeURIComponent(location)}</div>
-                    <div style={{position: 'absolute', top: '180px', right: '150px'}} className={"dtCont"}>
-                        <div style={{float: 'left', alignContent: 'center'}} className={"dateTime"}>JAN - WED 22</div>
-                        <div style={{float: 'left', marginTop: '6px', alignContent: 'center'}} className={"dateTime"}>12:00 PM</div>
+                    <div style={{ position: 'absolute', top: '110px', right: '150px', alignContent: 'center' }} className={"nameBox"}>{decodeURIComponent(location)}</div>
+                    <div style={{ position: 'absolute', top: '180px', right: '150px' }} className={"dtCont"}>
+                        <div style={{ float: 'left', alignContent: 'center' }} className={"dateTime"}>JAN - WED 22</div>
+                        <div style={{ float: 'left', marginTop: '6px', alignContent: 'center' }} className={"dateTime"}>12:00 PM</div>
                     </div>
 
-                    <Link to="/"><button style={{position: 'absolute', bottom: '5%', right: '5%'}} className={"button"}>SEARCH</button></Link>
-                    <Link to="/saved"><button style={{position: 'absolute', bottom: '5%', right: '17.5%'}} className={"button"}>SAVED LOCATIONS</button></Link>
-                    <button style={{position: 'absolute', bottom: '5%', right: '30%'}} className={"button"} onClick={saveLocation}>SAVE THIS LOCATION</button>
-                    <button onClick={() => toggleUnitChoice(setIsMetric)} style={{position: 'absolute', bottom: '5%', right: '42.5%'}} className={"button"}>
+                    <Link to="/"><button style={{ position: 'absolute', bottom: '5%', right: '5%' }} className={"button"}>SEARCH</button></Link>
+                    <Link to="/saved"><button style={{ position: 'absolute', bottom: '5%', right: '17.5%' }} className={"button"}>SAVED LOCATIONS</button></Link>
+                    <button style={{ position: 'absolute', bottom: '5%', right: '30%' }} className={"button"} onClick={saveLocation}>SAVE THIS LOCATION</button>
+                    <button onClick={() => toggleUnitChoice(setIsMetric)} style={{ position: 'absolute', bottom: '5%', right: '42.5%' }} className={"button"}>
                         {isMetric ? "SWITCH TO IMPERIAL" : "SWITCH TO METRIC"}
                     </button>
-                    
+
                     {isLoaded && (
-                        <div style={{position: 'absolute', top: '110px', left: '150px'}} className={"mapBox"}>
+                        <div style={{ position: 'absolute', top: '110px', left: '150px' }} className={"mapBox"}>
                             <WeatherMap lat={lat} lon={lon} />
                         </div>
                     )}
 
-                    <div style={{position: 'absolute', top: '110px', left: '615px'}} className={"weathAl"}>
-                        <p style={{fontFamily: "VT323", marginTop: '10px', fontSize: "40px", fontWeight: '500'}}>WEATHER ALERT</p>
-                        <p style={{fontFamily: "Silkscreen", fontSize: "18px", fontWeight: '400', marginTop: '-30px'}}>
-                            weather alert goes here, displays no notice if no alert text text text text
+                    <div style={{ position: 'absolute', top: '110px', left: '615px' }} className={"weathAl"}>
+                        <p style={{ fontFamily: "VT323", marginTop: '10px', fontSize: "40px", fontWeight: '500' }}>WEATHER ALERT</p>
+                        <p style={{ fontFamily: "Silkscreen", fontSize: "18px", fontWeight: '400', marginTop: '-30px' }}>
+                            No active alerts in your area.
                         </p>
                     </div>
 
-                    <div style={{position: 'absolute', top: '310px', left: '615px'}} className={"forecast"}>
-                        <button className={"button"} style={{position: 'absolute', top: '-10px', right: '10px', width: '130px', backgroundColor: "#f1e5d4"}}>VIEW DAILY</button>
-                        <div style={{float: 'left'}} className={"foreBox"}></div>
-                        <div style={{float: 'left'}} className={"foreBox"}></div>
-                        <div style={{float: 'left'}} className={"foreBox"}></div>
-                        <div style={{float: 'left'}} className={"foreBox"}></div>
-                        <div style={{float: 'left'}} className={"foreBox"}></div>
-                        <div style={{float: 'left'}} className={"foreBox"}></div>
-                        <div style={{float: 'left'}} className={"foreBox"}></div>
+                    <div style={{ position: 'absolute', top: '310px', left: '615px' }} className={"forecast"}>
+                        <button
+                            className={"button"}
+                            style={{ position: 'absolute', top: '-10px', right: '10px', width: '130px', backgroundColor: "#f1e5d4" }}
+                            onClick={() => {
+                                setViewMode(viewMode === "hourly" ? "daily" : "hourly");
+                                setVisibleIndex(0); // reset on toggle
+                            }}
+                        >
+                            VIEW {viewMode === "hourly" ? "DAILY" : "HOURLY"}
+                        </button>{(viewMode === "hourly" ? hourlyForecast : dailyForecast)
+                            .slice(visibleIndex, visibleIndex + batchSize)
+                            .map((item, index) => (
+                                <div key={index} className={"foreBox"}>
+                                    <p style={{ fontWeight: "bold", fontSize: "16px" }}>
+                                        {item.dt_txt ? new Date(item.dt_txt).toLocaleString() : "N/A"}
+                                    </p>
+                                    <img src={`http://openweathermap.org/img/w/${item.weather[0].icon}.png`} alt="icon" />
+                                    <p>{viewMode === "hourly" ? item.main.temp.toFixed(1) : item.temp.max.toFixed(1)}°</p>
+                                    <p>{item.weather[0].main}</p>
+                                </div>
+                            ))}
+                    </div>
+                    <div className="arrowControls">
+                        <button onClick={handlePrev}>←</button>
+                        <button onClick={handleNext}>→</button>
                     </div>
 
-                    <img 
-                        src={`http://openweathermap.org/img/w/${weather.weather[0].icon}.png`} 
-                        alt="wthr img" 
+
+                    <img
+                        src={`http://openweathermap.org/img/w/${weather.weather[0].icon}.png`}
+                        alt="wthr img"
                         style={{ position: 'absolute', top: '175px', right: '395px', width: "140px", height: "140px" }}
                     />
-                    
-                    <div style={{position: 'absolute', top: '30px', left: '150px'}} className={"condInfo"}><b>{weather.weather[0].description}</b></div>
 
-                    <div style={{position: 'absolute', top: '640px', left: '615px'}} className={"weathInfo"}>
+                    <div style={{ position: 'absolute', top: '30px', left: '150px' }} className={"condInfo"}><b>{weather.weather[0].description}</b></div>
+
+                    <div style={{ position: 'absolute', top: '640px', left: '615px' }} className={"weathInfo"}>
                         <b>Temperature:</b> {(isMetric ? (weather.main.temp - 32) * (5 / 9) : weather.main.temp).toFixed(1)}°{isMetric ? 'C' : 'F'}
                     </div>
-                    <div style={{position: 'absolute', top: '700px', left: '615px'}} className={"weathInfo"}>
+                    <div style={{ position: 'absolute', top: '700px', left: '615px' }} className={"weathInfo"}>
                         <b>Feels like:</b> {(isMetric ? (weather.main.feels_like - 32) * (5 / 9) : weather.main.feels_like).toFixed(1)}°{isMetric ? 'C' : 'F'}
                     </div>
-                    <div style={{position: 'absolute', top: '760px', left: '615px'}} className={"weathInfo"}>
+                    <div style={{ position: 'absolute', top: '760px', left: '615px' }} className={"weathInfo"}>
                         <b>High:</b> {(isMetric ? (weather.main.temp_max - 32) * (5 / 9) : weather.main.temp_max).toFixed(1)}°{isMetric ? 'C' : 'F'}
                     </div>
-                    <div style={{position: 'absolute', top: '820px', left: '615px'}} className={"weathInfo"}>
+                    <div style={{ position: 'absolute', top: '820px', left: '615px' }} className={"weathInfo"}>
                         <b>Low:</b> {(isMetric ? (weather.main.temp_min - 32) * (5 / 9) : weather.main.temp_min).toFixed(1)}°{isMetric ? 'C' : 'F'}
                     </div>
 
-                    <div style={{position: 'absolute', top: '640px', left: '1000px'}} className={"weathInfo"}><b>Humidity:</b> {weather.main.humidity}%</div>
-                    <div style={{position: 'absolute', top: '700px', left: '1000px'}} className={"weathInfo"}>
+                    <div style={{ position: 'absolute', top: '640px', left: '1000px' }} className={"weathInfo"}><b>Humidity:</b> {weather.main.humidity}%</div>
+                    <div style={{ position: 'absolute', top: '700px', left: '1000px' }} className={"weathInfo"}>
                         <b>Wind:</b> {(isMetric ? weather.wind.speed * 0.44704 : weather.wind.speed).toFixed(1)} {isMetric ? 'm/s' : 'mph'}
                     </div>
-                    <div style={{position: 'absolute', top: '760px', left: '1000px'}} className={"weathInfo"}><b>Pressure:</b> {weather.main.pressure} hPa</div>
-                    <div style={{position: 'absolute', top: '820px', left: '1000px'}} className={"weathInfo"}>
+                    <div style={{ position: 'absolute', top: '760px', left: '1000px' }} className={"weathInfo"}><b>Pressure:</b> {weather.main.pressure} hPa</div>
+                    <div style={{ position: 'absolute', top: '820px', left: '1000px' }} className={"weathInfo"}>
                         <b>Visibility:</b> {(isMetric ? weather.visibility * 0.621371 : weather.visibility).toFixed(1)} {isMetric ? 'kilometers' : 'miles'}
                     </div>
                 </div>
@@ -249,15 +285,15 @@ const WeatherInfo = () => {
 
             {astronomyData ? (
                 <div className={"weathCont"}>
-                    <div style={{position: 'absolute', top: '640px', right: '150px'}} className={"weathInfo"}><b>UV Index:</b> {astronomyData.uvIndex}</div>
-                    <div style={{position: 'absolute', top: '700px', right: '150px'}} className={"weathInfo"}><b>Sunrise:</b> {astronomyData.sunrise}</div>
-                    <div style={{position: 'absolute', top: '760px', right: '150px'}} className={"weathInfo"}><b>Sunset:</b> {astronomyData.sunset}</div>
-                    <div style={{position: 'absolute', top: '820px', right: '150px'}} className={"weathInfo"}><b>Moon Phase:</b> {getMoonPhase(astronomyData.moonphase)}</div>
+                    <div style={{ position: 'absolute', top: '640px', right: '150px' }} className={"weathInfo"}><b>UV Index:</b> {astronomyData.uvIndex}</div>
+                    <div style={{ position: 'absolute', top: '700px', right: '150px' }} className={"weathInfo"}><b>Sunrise:</b> {astronomyData.sunrise}</div>
+                    <div style={{ position: 'absolute', top: '760px', right: '150px' }} className={"weathInfo"}><b>Sunset:</b> {astronomyData.sunset}</div>
+                    <div style={{ position: 'absolute', top: '820px', right: '150px' }} className={"weathInfo"}><b>Moon Phase:</b> {getMoonPhase(astronomyData.moonphase)}</div>
                 </div>
             ) : (
                 <p>Loading astronomy data...</p>
             )}
-            
+
             <ForecastTabs hourlyForecast={hourlyForecast} dailyForecast={dailyForecast} />
         </div>
 
