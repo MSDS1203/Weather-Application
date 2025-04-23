@@ -98,18 +98,18 @@ const WeatherInfo = () => {
 
                 const data = await response.json();
 
-                const utcTimestamp = data.dt * 1000; 
-                const timezoneOffsetMs = data.timezone * 1000; 
+                const utcTimestamp = data.dt * 1000;
+                const timezoneOffsetMs = data.timezone * 1000;
                 const localTime = new Date(utcTimestamp + timezoneOffsetMs);
 
                 const options = {
-                timeZone: 'UTC', 
-                weekday: 'short',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
+                    timeZone: 'UTC',
+                    weekday: 'short',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
                 };
 
                 const splittingString = localTime.toLocaleString('en-US', options).split("at");
@@ -218,10 +218,10 @@ const WeatherInfo = () => {
             {loading && <p>Loading...</p>}
             {weather && (
                 <div className={"weathCont"}>
-                    <div style={{position: 'absolute', top: '110px', right: '150px', alignContent: 'center'}} className={"nameBox"}>{decodeURIComponent(location)}</div>
-                    <div style={{position: 'absolute', top: '180px', right: '150px'}} className={"dtCont"}>
-                        <div style={{float: 'left', alignContent: 'center'}} className={"dateTime"}>{ currentDate }</div>
-                        <div style={{float: 'left', marginTop: '6px', alignContent: 'center'}} className={"dateTime"}>{ time }</div>
+                    <div style={{ position: 'absolute', top: '110px', right: '150px', alignContent: 'center' }} className={"nameBox"}>{decodeURIComponent(location)}</div>
+                    <div style={{ position: 'absolute', top: '180px', right: '150px' }} className={"dtCont"}>
+                        <div style={{ float: 'left', alignContent: 'center' }} className={"dateTime"}>{currentDate}</div>
+                        <div style={{ float: 'left', marginTop: '6px', alignContent: 'center' }} className={"dateTime"}>{time}</div>
                     </div>
 
                     <Link to="/"><button style={{ position: 'absolute', bottom: '5%', right: '5%' }} className={"button"}>SEARCH</button></Link>
@@ -244,33 +244,64 @@ const WeatherInfo = () => {
                         </p>
                     </div>
 
-                    <div style={{ position: 'absolute', top: '310px', left: '615px' }} className={"forecast"}>
+                    <div
+                        style={{ position: 'absolute', top: '310px', left: '615px' }}
+                        className="forecast"
+                    >
                         <button
-                            className={"button"}
-                            style={{ position: 'absolute', top: '-10px', right: '10px', width: '130px', backgroundColor: "#f1e5d4" }}
+                            className="button"
+                            style={{
+                                position: 'absolute',
+                                top: '10px',
+                                right: '10px',
+                                width: '130px',
+                                backgroundColor: '#f1e5d4',
+                            }}
                             onClick={() => {
-                                setViewMode(viewMode === "hourly" ? "daily" : "hourly");
-                                setVisibleIndex(0); // reset on toggle
+                                setViewMode(viewMode === 'hourly' ? 'daily' : 'hourly');
+                                setVisibleIndex(0);
                             }}
                         >
-                            VIEW {viewMode === "hourly" ? "DAILY" : "HOURLY"}
-                        </button>{(viewMode === "hourly" ? hourlyForecast : dailyForecast)
+                            VIEW {viewMode === 'hourly' ? 'DAILY' : 'HOURLY'}
+                        </button>
+
+                        {(viewMode === 'hourly' ? hourlyForecast : dailyForecast)
                             .slice(visibleIndex, visibleIndex + batchSize)
                             .map((item, index) => (
-                                <div key={index} className={"foreBox"}>
-                                    <p style={{ fontWeight: "bold", fontSize: "16px" }}>
-                                        {item.dt_txt ? new Date(item.dt_txt).toLocaleString() : "N/A"}
+                                <div key={index} className="foreBox">
+                                    <p style={{ fontWeight: 'bold', fontSize: '16px' }}>
+                                        {viewMode === 'hourly'
+                                            ? new Date(item.dt_txt).toLocaleTimeString([], {
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                            })
+                                            : new Date(item.dt * 1000).toLocaleDateString()}
                                     </p>
-                                    <img src={`http://openweathermap.org/img/w/${item.weather[0].icon}.png`} alt="icon" />
-                                    <p>{viewMode === "hourly" ? item.main.temp.toFixed(1) : item.temp.max.toFixed(1)}°</p>
-                                    <p>{item.weather[0].main}</p>
+                                    <img
+                                        src={`http://openweathermap.org/img/w/${item.weather[0].icon}.png`}
+                                        alt="icon"
+                                    />
+                                    <p>
+                                    </p>
+                                        {viewMode === 'hourly' ? (
+                                            <p>{item?.main?.temp ? `${item.main.temp.toFixed(0)}°F` : 'N/A'}</p>
+                                        ) : (
+                                            <>
+                                                <p>{item?.main?.temp_max ? `Hi: ${item.main.temp_max.toFixed(0)}°F` : 'Hi: N/A'}</p> 
+                                                <p>{item?.main?.temp_min ? ` Lo: ${item.main.temp_min.toFixed(0)}°F` : ' Lo: N/A'}</p>
+                                            </>
+                                        )}
+
+                                        <p>{item.weather[0].main}</p>
                                 </div>
                             ))}
                     </div>
+
                     <div className="arrowControls">
                         <button onClick={handlePrev}>←</button>
                         <button onClick={handleNext}>→</button>
                     </div>
+
 
 
                     <img

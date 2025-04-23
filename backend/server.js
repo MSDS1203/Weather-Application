@@ -126,7 +126,7 @@ app.get("/forecast/hourly", async (req, res) => {
 
 // Route to get daily forecast
 // URL: localhost:3001/forecast/daily?lat=LATITUDE&lon=LONGITUDE&appid=API_KEY
-app.get("/forecast", async (req, res) => {
+app.get("/forecast/daily", async (req, res) => {
     
     const { lat, lon, unit = "imperial"} = req.query;
     if (!lat || !lon) return res.status(400).json({ error: "Latitude and Longitude are required" });
