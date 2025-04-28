@@ -139,6 +139,55 @@ const WeatherInfo = () => {
                 const hourlyData = await resHourly.json();
                 const dailyData = await resDaily.json();
 
+                console.log("Daily Data:", dailyData);
+                console.log("Daily Data List to get:", dailyData.list.slice(0, 16));
+
+                const listOfDays = dailyData.list.slice(0, 16);
+                for (let i = 0; i < listOfDays.length; i++) {
+                    const utcTimestamp = listOfDays[i].dt * 1000;
+                    const timezoneOffsetMs = dailyData.city.timezone * 1000;
+                    const localTime = new Date(utcTimestamp + timezoneOffsetMs);
+
+                    listOfDays[i].dt_txt = localTime.toLocaleDateString('en-US', {
+                        timeZone: 'UTC',
+                        weekday: 'short',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    });
+
+                    console.log(listOfDays[i].dt_txt);
+
+                    listOfDays[i].dt_txt = listOfDays[i].dt_txt.split(" at ")[0].trim();
+
+                    console.log("Local Time:", listOfDays[i]);
+
+                }
+
+                const listOfHours = hourlyData.list.slice(0, 96);
+                for (let i = 0; i < listOfHours.length; i++) {
+                    const utcTimestamp = listOfHours[i].dt * 1000;
+                    const timezoneOffsetMs = hourlyData.city.timezone * 1000;
+                    const localTime = new Date(utcTimestamp + timezoneOffsetMs);
+                    const options = {
+                        timeZone: 'UTC',
+                        weekday: 'short',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    };
+
+                    const splittingString = localTime.toLocaleString('en-US', options).split("at");
+                    splittingString[0] = splittingString[0].replace(/,/g, '');
+
+                    const time = splittingString[1].trim();
+                    listOfHours[i].dt_txt = time;
+                }
+
                 setHourlyForecast(hourlyData.list.slice(0, 96));
                 setDailyForecast(dailyData.list.slice(0, 16));
             } catch (err) {
@@ -270,12 +319,7 @@ const WeatherInfo = () => {
                             .map((item, index) => (
                                 <div key={index} className="foreBox">
                                     <p style={{ fontWeight: 'bold', fontSize: '16px' }}>
-                                        {viewMode === 'hourly'
-                                            ? new Date(item.dt_txt).toLocaleTimeString([], {
-                                                hour: '2-digit',
-                                                minute: '2-digit',
-                                            })
-                                            : new Date(item.dt * 1000).toLocaleDateString()}
+                                        {item.dt_txt}
                                     </p>
                                     <img
                                         src={`http://openweathermap.org/img/w/${item.weather[0].icon}.png`}
@@ -287,8 +331,8 @@ const WeatherInfo = () => {
                                             <p>{item?.main?.temp ? `${item.main.temp.toFixed(0)}°F` : 'N/A'}</p>
                                         ) : (
                                             <>
-                                                <p>{item?.main?.temp_max ? `Hi: ${item.main.temp_max.toFixed(0)}°F` : 'Hi: N/A'}</p> 
-                                                <p>{item?.main?.temp_min ? ` Lo: ${item.main.temp_min.toFixed(0)}°F` : ' Lo: N/A'}</p>
+                                                <p>{item?.temp.max ? `Hi: ${item.temp.max.toFixed(0)}°F` : 'Hi: N/A'}</p> 
+                                                <p>{item?.temp.min ? ` Lo: ${item.temp.min.toFixed(0)}°F` : ' Lo: N/A'}</p>
                                             </>
                                         )}
 
