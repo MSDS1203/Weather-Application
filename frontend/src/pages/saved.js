@@ -83,7 +83,7 @@ const Saved = () => {
                 <button key={location} className={"savedLoc"} onClick={() => {navigate(`/weather/${encodeURIComponent(values.location)}/${values.latitude}/${values.longitude}`)}}>
                     <p style={{fontFamily: "VT323", fontSize: "28px", fontWeight: '500', marginTop: '60px', marginBottom: '-15px'}}><b>{values.location}</b></p>
                     <WeatherDisplay lat={values.latitude} lon={values.longitude} isMetric={isMetric} />
-                    <button onClick={() => unsaveLocation(location)} style= {{position: "relative", top: "-565px", left: "-160px"}} className={"removeLoc"}>X</button>
+                    <button onClick={(event) => { event.stopPropagation(); unsaveLocation(location); }} style= {{position: "relative", top: "-565px", left: "-160px"}} className={"removeLoc"}>X</button>
                     <img src={image} alt="placeholder" style={{position: "relative", width: '80px', height: '80px', top: '-615px', left: '-223px'}} />
                 </button>
             ))}
