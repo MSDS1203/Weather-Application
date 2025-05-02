@@ -211,10 +211,9 @@ const WeatherInfo = () => {
     };
 
     const saveLocation = async () => {
-        if (buttonText === 'Save Location') {
-            setButtonText('Un-save Location');
-
-            try {
+        try {
+            if (buttonText === 'Save Location') {
+                // Save the location
                 const response = await fetch('/save-location', {
                     method: 'POST',
                     headers: {
@@ -226,37 +225,32 @@ const WeatherInfo = () => {
                         lon
                     }),
                 });
-
+    
                 if (!response.ok) {
                     throw new Error('Failed to save location');
                 }
-
+    
                 setButtonText('Un-save Location');
                 alert('Location saved successfully');
-
-            } catch (error) {
-                console.error('Error saving location:', error);
-                alert('Failed to save location');
-            }
-        } else {
-            try {
+            } else {
+                // Un-save the location
                 const response = await fetch(`/delete-location/${encodeURIComponent(location)}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                 });
-
+    
                 if (!response.ok) {
                     throw new Error('Failed to delete location');
                 }
+    
+                setButtonText('Save Location');
                 alert('Location deleted successfully');
-
-            } catch (error) {
-                console.error('Error deleting location:', error);
-                alert('Failed to delete location');
             }
-            setButtonText('Save Location');
+        } catch (error) {
+            console.error('Error:', error);
+            alert(`Failed to ${buttonText === 'Save Location' ? 'save' : 'delete'} location`);
         }
     };
 
@@ -275,7 +269,7 @@ const WeatherInfo = () => {
 
                     <Link to="/"><button style={{ position: 'absolute', bottom: '5%', right: '5%' }} className={"button"}>SEARCH</button></Link>
                     <Link to="/saved"><button style={{ position: 'absolute', bottom: '5%', right: '17.5%' }} className={"button"}>SAVED LOCATIONS</button></Link>
-                    <button style={{ position: 'absolute', bottom: '5%', right: '30%' }} className={"button"} onClick={saveLocation}>SAVE THIS LOCATION</button>
+                    <button style={{ position: 'absolute', bottom: '5%', right: '30%' }} className={"button"} onClick={saveLocation}>{buttonText}</button>
                     <button onClick={() => toggleUnitChoice(setIsMetric)} style={{ position: 'absolute', bottom: '5%', right: '42.5%' }} className={"button"}>
                         {isMetric ? "SWITCH TO IMPERIAL" : "SWITCH TO METRIC"}
                     </button>
