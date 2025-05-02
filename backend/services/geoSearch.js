@@ -144,8 +144,8 @@ async function getHourlyForecast(lat, lon, unit = 'imperial') {
                 lat,
                 lon,
                 appid: OPENWEATHER_API_KEY,
-                unit,
-                cnt: 96 // Can be changed to a number between 24 (1 day) up to 96 (4 days)
+                units: unit,
+                cnt: 24 // Can be changed to a number between 24 (1 day) up to 96 (4 days)
             }
         });
 
@@ -157,7 +157,7 @@ async function getHourlyForecast(lat, lon, unit = 'imperial') {
 }
 
 // Get Daily Forecast for up to the next 16 days
-async function getDailyForecast(lat, lon, unit) {
+async function getDailyForecast(lat, lon, unit = 'imperial') {
     try {
         const response = await axios.get(`http://api.openweathermap.org/data/2.5/forecast/daily`, {
             params: {
@@ -165,7 +165,6 @@ async function getDailyForecast(lat, lon, unit) {
                 lon,
                 appid: OPENWEATHER_API_KEY,
                 units: unit,
-                cnt: 16 // Number of days. Can be changed to a number bewteen 1 and 16
             }
         });
 

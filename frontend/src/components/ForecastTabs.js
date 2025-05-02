@@ -1,18 +1,14 @@
 import React, { useState } from "react";
 import styles from "./ForecastTabs.module.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
 
 const ForecastTabs = ({ hourlyForecast, dailyForecast }) => {
     const [activeTab, setActiveTab] = useState("hourly");
 
     const settings = {
-        dots: true,
         infinite: false,
         speed: 1000,
-        slidesToShow: 6,
-        slidesToScroll: 4,
+        slidesToShow: 7,
+        slidesToScroll: 1,
         responsive: [
             {
                 breakpoint: 768,
@@ -27,7 +23,7 @@ const ForecastTabs = ({ hourlyForecast, dailyForecast }) => {
 
     return (
         <div>
-            <div className={styles.tabButtons}>
+            <div className={styles.forecast}>
                 <button
                     className={activeTab === "hourly" ? styles.active : ""}
                     onClick={() => setActiveTab("hourly")}
@@ -43,37 +39,33 @@ const ForecastTabs = ({ hourlyForecast, dailyForecast }) => {
             </div>
 
             {activeTab === "hourly" && (
-                <Slider {...settings}>
-                    {hourlyForecast.map((hour, index) => (
-                        <div key={index} className={styles.forecastCard}>
-                            <p>{hour.dt_txt}</p>
-                            <img
-                                src={`http://openweathermap.org/img/w/${hour.weather[0].icon}.png`}
-                                alt="weather icon"
-                            />
-                            <p>{hour.main.temp}°F</p>
-                            <p>{hour.weather[0].description}</p>
-                        </div>
-                    ))}
-                </Slider>
+                hourlyForecast.map((hour, index) => (
+                    <div key={index} className={styles.foreBox}>
+                        <p>{hour.dt_txt}</p>
+                        <img
+                            src={`http://openweathermap.org/img/w/${hour.weather[0].icon}.png`}
+                            alt="weather icon"
+                        />
+                        <p>{hour.main.temp}°F</p>
+                        <p>{hour.weather[0].description}</p>
+                    </div>
+                ))
             )}
 
 
             {activeTab === "daily" && (
-                <Slider {...settings}>
-                    {dailyForecast.map((day, index) => (
-                        <div key={index} className={styles.forecastCard}>
-                            <p>{new Date(day.dt * 1000).toLocaleDateString()}</p>
-                            <img
-                                src={`http://openweathermap.org/img/w/${day.weather[0].icon}.png`}
-                                alt="weather icon"
-                            />
-                            <p>High: {day.temp.max}°F</p>
-                            <p>Low: {day.temp.min}°F</p>
-                            <p>{day.weather[0].description}</p>
-                        </div>
-                    ))}
-                </Slider>
+                dailyForecast.map((day, index) => (
+                    <div key={index} className={styles.foreBox}>
+                        <p>{day.dt_txt}</p>
+                        <img
+                            src={`http://openweathermap.org/img/w/${day.weather[0].icon}.png`}
+                            alt="weather icon"
+                        />
+                        <p>High: {day.temp.max}°F</p>
+                        <p>Low: {day.temp.min}°F</p>
+                        <p>{day.weather[0].description}</p>
+                    </div>
+                ))
             )}
         </div>
     );
