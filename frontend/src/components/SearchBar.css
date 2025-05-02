@@ -77,8 +77,12 @@ li {
   border-radius: 5px;
   border-color: #654c3f;
   cursor: pointer;
+  font-family:'VT323';
+  font-size: 20px;
+  width: 11%;
 }
 
 .button:hover {
+    transition: 0.4s;
     background-color: #f1e5d4;
 }

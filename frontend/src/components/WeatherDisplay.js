@@ -62,6 +62,11 @@ const WeatherDisplay = ({ lat, lon, isMetric }) => {
             <p style={{fontFamily: "Silkscreen", }}><b>Feels like:</b> {feelsLike.toFixed(1)}{isMetric ? '°C' : '°F'}</p>
             <p style={{fontFamily: "Silkscreen", marginTop: '120px'}}><b>Humidity:</b> {weather.main.humidity}%</p>
             <p style={{fontFamily: "Silkscreen", }}><b>Wind Speed:</b> {windSpeed.toFixed(1)}{isMetric ? 'm/s' : 'mph'}</p>
+
+            <img
+                src={`http://openweathermap.org/img/w/${weather.weather[0].icon}.png`}
+                alt="icon" style={{position: "relative", width: '105px', height: '105px', top: '-595px', left: '-200px'}}
+            />
         </div>
     );
 };

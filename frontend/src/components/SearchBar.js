@@ -74,7 +74,7 @@ const SearchBar = ({ onSelect }) => {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
             />
-            <button className={"button"} onClick={handleCurrentLocation} disabled={loadingLocation}>
+            <button className={"button"} style={{width: '50%'}} onClick={handleCurrentLocation} disabled={loadingLocation}>
                 {loadingLocation ? "Getting Location..." : "USE CURRENT LOCATION"}
             </button>
         </div>

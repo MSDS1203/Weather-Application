@@ -27,6 +27,11 @@ const Search = () => {
                 <button onClick={() => toggleUnitChoice(setIsMetric)} style={{position: 'absolute', top: '28%', right: '21%', padding: '10px'}} className={"button"}>{isMetric ? "SWITCH TO IMPERIAL" : "SWITCH TO METRIC"}</button>
             </div>
             
+            
+            <div className = {"weathAl"} style = {{position: 'relative', top: '170px', width: '33%', height: '110px', borderRadius: '20px'}}>
+                <p style={{ fontFamily: "Silkscreen", marginTop: '15px', fontSize: "60px", fontWeight: '500' }}>WEATHER VALLEY</p>
+            </div>
+
             <div className="container">
                 <SearchBar onSelect={handleSelectLocation} /> {/* Pass handleSelectLocation to SearchBar */}
             </div>

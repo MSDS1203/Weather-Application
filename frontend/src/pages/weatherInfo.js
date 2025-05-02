@@ -267,8 +267,8 @@ const WeatherInfo = () => {
             {loading && <p>Loading...</p>}
             {weather && (
                 <div className={"weathCont"}>
-                    <div style={{ position: 'absolute', top: '110px', right: '150px', alignContent: 'center' }} className={"nameBox"}>{decodeURIComponent(location)}</div>
-                    <div style={{ position: 'absolute', top: '180px', right: '150px' }} className={"dtCont"}>
+                    <div style={{ position: 'absolute', top: '11%', right: '8%', alignContent: 'center' }} className={"nameBox"}>{decodeURIComponent(location)}</div>
+                    <div style={{ position: 'absolute', top: '18%', right: '8%' }} className={"dtCont"}>
                         <div style={{ float: 'left', alignContent: 'center' }} className={"dateTime"}>{currentDate}</div>
                         <div style={{ float: 'left', marginTop: '6px', alignContent: 'center' }} className={"dateTime"}>{time}</div>
                     </div>
@@ -281,30 +281,26 @@ const WeatherInfo = () => {
                     </button>
 
                     {isLoaded && (
-                        <div style={{ position: 'absolute', top: '110px', left: '150px' }} className={"mapBox"}>
+                        <div style={{ position: 'absolute', top: '11%', left: '8%' }} className={"mapBox"}>
                             <WeatherMap lat={lat} lon={lon} />
                         </div>
                     )}
 
-                    <div style={{ position: 'absolute', top: '110px', left: '615px' }} className={"weathAl"}>
-                        <p style={{ fontFamily: "VT323", marginTop: '10px', fontSize: "40px", fontWeight: '500' }}>WEATHER ALERT</p>
-                        <p style={{ fontFamily: "Silkscreen", fontSize: "18px", fontWeight: '400', marginTop: '-30px' }}>
-                            No active alerts in your area.
-                        </p>
+                    <div style={{ position: 'absolute', top: '11%', left: '32.7%' }} className={"weathAl"}>
+                        <p style={{ fontFamily: "Silkscreen", marginTop: '5%', fontSize: "70px", fontWeight: '500' }}>WEATHER VALLEY</p>
                     </div>
 
                     <div
-                        style={{ position: 'absolute', top: '310px', left: '615px' }}
+                        style={{ position: 'absolute', top: '31%', left: '32.7%' }}
                         className="forecast"
                     >
                         <button
-                            className="button"
+                            className="hourly"
                             style={{
                                 position: 'absolute',
-                                top: '10px',
-                                right: '10px',
-                                width: '130px',
-                                backgroundColor: '#f1e5d4',
+                                top: '4%',
+                                right: '1%',
+                                width: '13%'
                             }}
                             onClick={() => {
                                 setViewMode(viewMode === 'hourly' ? 'daily' : 'hourly');
@@ -317,18 +313,15 @@ const WeatherInfo = () => {
                         {(viewMode === 'hourly' ? hourlyForecast : dailyForecast)
                             .slice(visibleIndex, visibleIndex + batchSize)
                             .map((item, index) => (
-                                <div key={index} className="foreBox">
-                                    <p style={{ fontWeight: 'bold', fontSize: '16px' }}>
-                                        {item.dt_txt}
-                                    </p>
+                                <div key={index} className="foreBox" style={{position: 'relative', top: '30px'}}>
                                     <img
                                         src={`http://openweathermap.org/img/w/${item.weather[0].icon}.png`}
-                                        alt="icon"
+                                        alt="icon" style={{position: "absolute", width: '65%', height: 'auto', top: '-22%', left: '18%'}}
                                     />
                                     <p>
                                     </p>
                                         {viewMode === 'hourly' ? (
-                                            <p>{item?.main?.temp ? `${item.main.temp.toFixed(0)}°F` : 'N/A'}</p>
+                                            <p style={{ fontWeight: 'bold', fontSize: '60px', position: 'relative', marginTop: '-5%', marginBottom: '-5%' }}>{item?.main?.temp ? `${item.main.temp.toFixed(0)}°F` : 'N/A'}</p>
                                         ) : (
                                             <>
                                                 <p>{item?.temp.max ? `Hi: ${item.temp.max.toFixed(0)}°F` : 'Hi: N/A'}</p> 
@@ -336,7 +329,11 @@ const WeatherInfo = () => {
                                             </>
                                         )}
 
-                                        <p>{item.weather[0].main}</p>
+                                        <p style={{ fontFamily: "Silkscreen", fontSize: '20px', position: 'relative', marginBottom: '30%' }}>{item.weather[0].main}</p>
+
+                                        <p style={{ fontFamily: "Silkscreen", fontWeight: 'bold', fontSize: '11px', position: 'relative' }}>
+                                        {item.dt_txt}
+                                    </p>
                                 </div>
                             ))}
                     </div>
@@ -351,30 +348,30 @@ const WeatherInfo = () => {
                     <img
                         src={`http://openweathermap.org/img/w/${weather.weather[0].icon}.png`}
                         alt="wthr img"
-                        style={{ position: 'absolute', top: '175px', right: '395px', width: "140px", height: "140px" }}
+                        style={{ position: 'absolute', top: '17.5%', right: '20.8%', width: "7%", height: "auto" }}
                     />
 
-                    <div style={{ position: 'absolute', top: '30px', left: '150px' }} className={"condInfo"}><b>{weather.weather[0].description}</b></div>
+                    <div style={{ position: 'absolute', top: '3%', left: '8%' }} className={"condInfo"}><b>{weather.weather[0].description}</b></div>
 
-                    <div style={{ position: 'absolute', top: '640px', left: '615px' }} className={"weathInfo"}>
+                    <div style={{ position: 'absolute', top: '64%', left: '32.7%' }} className={"weathInfo"}>
                         <b>Temperature:</b> {(isMetric ? (weather.main.temp - 32) * (5 / 9) : weather.main.temp).toFixed(1)}°{isMetric ? 'C' : 'F'}
                     </div>
-                    <div style={{ position: 'absolute', top: '700px', left: '615px' }} className={"weathInfo"}>
+                    <div style={{ position: 'absolute', top: '70%', left: '32.7%' }} className={"weathInfo"}>
                         <b>Feels like:</b> {(isMetric ? (weather.main.feels_like - 32) * (5 / 9) : weather.main.feels_like).toFixed(1)}°{isMetric ? 'C' : 'F'}
                     </div>
-                    <div style={{ position: 'absolute', top: '760px', left: '615px' }} className={"weathInfo"}>
+                    <div style={{ position: 'absolute', top: '76%', left: '32.7%' }} className={"weathInfo"}>
                         <b>High:</b> {(isMetric ? (weather.main.temp_max - 32) * (5 / 9) : weather.main.temp_max).toFixed(1)}°{isMetric ? 'C' : 'F'}
                     </div>
-                    <div style={{ position: 'absolute', top: '820px', left: '615px' }} className={"weathInfo"}>
+                    <div style={{ position: 'absolute', top: '82%', left: '32.7%' }} className={"weathInfo"}>
                         <b>Low:</b> {(isMetric ? (weather.main.temp_min - 32) * (5 / 9) : weather.main.temp_min).toFixed(1)}°{isMetric ? 'C' : 'F'}
                     </div>
 
-                    <div style={{ position: 'absolute', top: '640px', left: '1000px' }} className={"weathInfo"}><b>Humidity:</b> {weather.main.humidity}%</div>
-                    <div style={{ position: 'absolute', top: '700px', left: '1000px' }} className={"weathInfo"}>
+                    <div style={{ position: 'absolute', top: '64%', left: '53.2%' }} className={"weathInfo"}><b>Humidity:</b> {weather.main.humidity}%</div>
+                    <div style={{ position: 'absolute', top: '70%', left: '53.2%' }} className={"weathInfo"}>
                         <b>Wind:</b> {(isMetric ? weather.wind.speed * 0.44704 : weather.wind.speed).toFixed(1)} {isMetric ? 'm/s' : 'mph'}
                     </div>
-                    <div style={{ position: 'absolute', top: '760px', left: '1000px' }} className={"weathInfo"}><b>Pressure:</b> {weather.main.pressure} hPa</div>
-                    <div style={{ position: 'absolute', top: '820px', left: '1000px' }} className={"weathInfo"}>
+                    <div style={{ position: 'absolute', top: '76%', left: '53.2%' }} className={"weathInfo"}><b>Pressure:</b> {weather.main.pressure} hPa</div>
+                    <div style={{ position: 'absolute', top: '82%', left: '53.2%' }} className={"weathInfo"}>
                         <b>Visibility:</b> {(isMetric ? weather.visibility * 0.621371 : weather.visibility).toFixed(1)} {isMetric ? 'kilometers' : 'miles'}
                     </div>
                 </div>
@@ -382,10 +379,10 @@ const WeatherInfo = () => {
 
             {astronomyData ? (
                 <div className={"weathCont"}>
-                    <div style={{ position: 'absolute', top: '640px', right: '150px' }} className={"weathInfo"}><b>UV Index:</b> {astronomyData.uvIndex}</div>
-                    <div style={{ position: 'absolute', top: '700px', right: '150px' }} className={"weathInfo"}><b>Sunrise:</b> {astronomyData.sunrise}</div>
-                    <div style={{ position: 'absolute', top: '760px', right: '150px' }} className={"weathInfo"}><b>Sunset:</b> {astronomyData.sunset}</div>
-                    <div style={{ position: 'absolute', top: '820px', right: '150px' }} className={"weathInfo"}><b>Moon Phase:</b> {getMoonPhase(astronomyData.moonphase)}</div>
+                    <div style={{ position: 'absolute', top: '64%', right: '8%' }} className={"weathInfo"}><b>UV Index:</b> {astronomyData.uvIndex}</div>
+                    <div style={{ position: 'absolute', top: '70%', right: '8%' }} className={"weathInfo"}><b>Sunrise:</b> {astronomyData.sunrise}</div>
+                    <div style={{ position: 'absolute', top: '76%', right: '8%' }} className={"weathInfo"}><b>Sunset:</b> {astronomyData.sunset}</div>
+                    <div style={{ position: 'absolute', top: '82%', right: '8%' }} className={"weathInfo"}><b>Moon Phase:</b> {getMoonPhase(astronomyData.moonphase)}</div>
                 </div>
             ) : (
                 <p>Loading astronomy data...</p>

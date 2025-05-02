@@ -1,7 +1,8 @@
 body {
     display: "flex";
     flex-direction: column;
-    height: "100vh";
+    width: 100%;
+    height: 100%;
     background-color: #be9178;
 }
 
@@ -11,7 +12,8 @@ h1 {
 
 .savedCont {
     text-align: center;
-    height: 100%; 
+    width: 95%;
+    height: 100%;
     color: #331E36;
     font-size: 20px;
     padding: 40px;
@@ -28,16 +30,20 @@ h1 {
     border: 2px solid #654c3f;
     background: #daba97;
     color: #463329;
-    width: 380px;
-    height: 750px;
-    margin-top: 55px;
-    margin-left: 80px;
-    margin-right: 15px;
+    width: 21%;
+    height: 90%;
+    margin-top: 3%;
+    margin-left: 3%;
+    margin-right: 1%;
     font-size: 15px;
     cursor: pointer;
 }
 
 .savedLoc:hover {
+    margin-top: -1%;
+    width: 23%;
+    height: 100%;
+    transition: 0.4s;
     background-color: #f1e5d4;
 }
 
@@ -50,10 +56,11 @@ h1 {
     cursor: pointer;
     font-family:'VT323';
     font-size: 20px;
-    width: 210px;
+    width: 11%;
 }
   
 .button:hover {
+    transition: 0.4s;
     background-color: #f1e5d4;
 }
 
@@ -73,6 +80,7 @@ h1 {
 }
 
 .removeLoc:hover {
+    transition: 0.4s;
     background-color: rgb(226, 37, 37);
     border-color: black;
     color: black;
@@ -84,16 +92,18 @@ h1 {
     padding: 10px 20px;
     border: 2px solid #654c3f;
     border-radius: 10px;
-    margin-top: 55px;
-    margin-left: 80px;
-    margin-right: 15px;
+    margin-top: 3%;
+    margin-left: 5%;
+    margin-right: 1%;
     cursor: pointer;
     font-family:'VT323';
     font-size: 20px;
-    height: 750px;
+    height: 74%;
 }
 
 .nextButton:hover {
+    height: 80%;
+    transition: 0.4s;
     background-color: #f1e5d4;
 }
 
