@@ -80,7 +80,7 @@ const Saved = () => {
             <button onClick = {handleNext} className={'nextButton'} disabled = {highOb >= Object.keys(locations).length} style = {{position: 'absolute', right: '5%'}}>NEXT</button>
 
             {Object.entries(locations).slice(lowOb, highOb).map(([location, values]) => (
-                <button key={location} className={"savedLoc"} onClick={() => {navigate(`/weather/${encodeURIComponent(values.name)}/${values.latitude}/${values.longitude}`)}}>
+                <button key={location} className={"savedLoc"} onClick={() => {navigate(`/weather/${encodeURIComponent(values.location)}/${values.latitude}/${values.longitude}`)}}>
                     <p style={{fontFamily: "VT323", fontSize: "28px", fontWeight: '500', marginTop: '60px', marginBottom: '-15px'}}><b>{values.location}</b></p>
                     <WeatherDisplay lat={values.latitude} lon={values.longitude} isMetric={isMetric} />
                     <button onClick={() => unsaveLocation(location)} style= {{position: "relative", top: "-565px", left: "-160px"}} className={"removeLoc"}>X</button>
