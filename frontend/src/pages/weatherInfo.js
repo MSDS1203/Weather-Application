@@ -173,19 +173,18 @@ const WeatherInfo = () => {
                     const localTime = new Date(utcTimestamp + timezoneOffsetMs);
                     const options = {
                         timeZone: 'UTC',
-                        weekday: 'short',
                         month: 'long',
                         day: 'numeric',
                         hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit'
+                        minute: '2-digit'
                     };
 
                     const splittingString = localTime.toLocaleString('en-US', options).split("at");
                     splittingString[0] = splittingString[0].replace(/,/g, '');
 
-                    const time = splittingString[1].trim();
-                    listOfHours[i].dt_txt = time;
+                    const fullTime = localTime.toLocaleString('en-US', options);
+                    listOfHours[i].dt_txt = fullTime;
+
                 }
 
                 setHourlyForecast(hourlyData.list.slice(0, 96));
@@ -197,6 +196,33 @@ const WeatherInfo = () => {
 
         fetchForecasts();
     }, [lat, lon]);
+
+    useEffect(() => {
+        const updateClock = () => {
+            const now = new Date();
+            const options = {
+                weekday: 'short',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+            };
+            const parts = now.toLocaleString('en-US', options).split(' at ');
+            const [date, time] = parts.length === 2
+                ? [parts[0].replace(/,/g, ''), parts[1]]
+                : [now.toLocaleDateString('en-US'), now.toLocaleTimeString('en-US')];
+
+            setCurrentDate(date);
+            setTime(time);
+        };
+
+        updateClock(); // initial run
+        const intervalId = setInterval(updateClock, 1000); // update every second
+
+        return () => clearInterval(intervalId); // cleanup
+    }, []);
+
 
     const getMoonPhase = (phase) => {
         if (phase === 0) return "New Moon";
@@ -225,11 +251,11 @@ const WeatherInfo = () => {
                         lon
                     }),
                 });
-    
+
                 if (!response.ok) {
                     throw new Error('Failed to save location');
                 }
-    
+
                 setButtonText('Un-save Location');
                 alert('Location saved successfully');
             } else {
@@ -240,11 +266,11 @@ const WeatherInfo = () => {
                         'Content-Type': 'application/json',
                     },
                 });
-    
+
                 if (!response.ok) {
                     throw new Error('Failed to delete location');
                 }
-    
+
                 setButtonText('Save Location');
                 alert('Location deleted successfully');
             }
@@ -281,10 +307,7 @@ const WeatherInfo = () => {
                     )}
 
                     <div style={{ position: 'absolute', top: '110px', left: '615px' }} className={"weathAl"}>
-                        <p style={{ fontFamily: "VT323", marginTop: '10px', fontSize: "40px", fontWeight: '500' }}>WEATHER ALERT</p>
-                        <p style={{ fontFamily: "Silkscreen", fontSize: "18px", fontWeight: '400', marginTop: '-30px' }}>
-                            No active alerts in your area.
-                        </p>
+                        <p style={{ fontFamily: "VT323", marginTop: '30px', fontSize: "100px", fontWeight: '500' }}>WEATHER VALLEY</p>
                     </div>
 
                     <div
@@ -321,26 +344,18 @@ const WeatherInfo = () => {
                                     />
                                     <p>
                                     </p>
-                                        {viewMode === 'hourly' ? (
-                                            <p>{item?.main?.temp ? `${item.main.temp.toFixed(0)}°F` : 'N/A'}</p>
-                                        ) : (
-                                            <>
-                                                <p>{item?.temp.max ? `Hi: ${item.temp.max.toFixed(0)}°F` : 'Hi: N/A'}</p> 
-                                                <p>{item?.temp.min ? ` Lo: ${item.temp.min.toFixed(0)}°F` : ' Lo: N/A'}</p>
-                                            </>
-                                        )}
+                                    {viewMode === 'hourly' ? (
+                                        <p>{(isMetric ? (item.main.temp - 32) * (5 / 9) : item.main.temp).toFixed(0)}°{isMetric ? 'C' : 'F'}</p>
+                                    ) : (
+                                        <>
+                                            <p>{(isMetric ? (item.temp.min - 32) * (5 / 9) : item.temp.min).toFixed(0)}°{isMetric ? 'C' : 'F'} / {(isMetric ? (item.temp.max - 32) * (5 / 9) : item.temp.max).toFixed(0)}°{isMetric ? 'C' : 'F'}</p>
+                                        </>
+                                    )}
 
-                                        <p>{item.weather[0].main}</p>
+                                    <p>{item.weather[0].main}</p>
                                 </div>
                             ))}
                     </div>
-
-                    <div className="arrowControls">
-                        <button onClick={handlePrev}>←</button>
-                        <button onClick={handleNext}>→</button>
-                    </div>
-
-
 
                     <img
                         src={`http://openweathermap.org/img/w/${weather.weather[0].icon}.png`}
