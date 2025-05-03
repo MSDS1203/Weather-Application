@@ -97,27 +97,8 @@ const WeatherInfo = () => {
                 if (!response.ok) throw new Error("Failed to fetch weather data");
 
                 const data = await response.json();
-
-                const utcTimestamp = data.dt * 1000;
-                const timezoneOffsetMs = data.timezone * 1000;
-                const localTime = new Date(utcTimestamp + timezoneOffsetMs);
-
-                const options = {
-                    timeZone: 'UTC',
-                    weekday: 'short',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
-                };
-
-                const splittingString = localTime.toLocaleString('en-US', options).split("at");
-                splittingString[0] = splittingString[0].replace(/,/g, '');
-
                 setWeather(data);
-                setTime(splittingString[1].trim());
-                setCurrentDate(splittingString[0].trim());
+
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -198,9 +179,11 @@ const WeatherInfo = () => {
     }, [lat, lon]);
 
     useEffect(() => {
-        const updateClock = () => {
+        const updateClock = (offset) => {
             const now = new Date();
+            const localTime = new Date(now.getTime() + offset);
             const options = {
+                timeZone: 'UTC',
                 weekday: 'short',
                 month: 'long',
                 day: 'numeric',
@@ -208,7 +191,7 @@ const WeatherInfo = () => {
                 minute: '2-digit',
                 second: '2-digit',
             };
-            const parts = now.toLocaleString('en-US', options).split(' at ');
+            const parts = localTime.toLocaleString('en-US', options).split(' at ');
             const [date, time] = parts.length === 2
                 ? [parts[0].replace(/,/g, ''), parts[1]]
                 : [now.toLocaleDateString('en-US'), now.toLocaleTimeString('en-US')];
@@ -217,8 +200,25 @@ const WeatherInfo = () => {
             setTime(time);
         };
 
-        updateClock(); // initial run
-        const intervalId = setInterval(updateClock, 1000); // update every second
+        let intervalId;
+
+        const intializeClock = async () => {
+            try {
+                const response = await fetch(`/weather?lat=${lat}&lon=${lon}`);
+                if (!response.ok) throw new Error("Failed to fetch weather data");
+    
+                const data = await response.json();
+                const timezoneOffsetMs = data.timezone * 1000;
+    
+                updateClock(timezoneOffsetMs); // Initial run
+                intervalId = setInterval(() => updateClock(timezoneOffsetMs), 1000); // Update every second
+            } catch (err) {
+                console.error("Error initializing clock:", err);
+                setError(err.message);
+            }
+        };
+
+        intializeClock();
 
         return () => clearInterval(intervalId); // cleanup
     }, []);
@@ -257,7 +257,6 @@ const WeatherInfo = () => {
                 }
 
                 setButtonText('Un-save Location');
-                alert('Location saved successfully');
             } else {
                 // Un-save the location
                 const response = await fetch(`/delete-location/${encodeURIComponent(location)}`, {
@@ -272,7 +271,6 @@ const WeatherInfo = () => {
                 }
 
                 setButtonText('Save Location');
-                alert('Location deleted successfully');
             }
         } catch (error) {
             console.error('Error:', error);
