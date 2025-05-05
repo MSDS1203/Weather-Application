@@ -97,27 +97,8 @@ const WeatherInfo = () => {
                 if (!response.ok) throw new Error("Failed to fetch weather data");
 
                 const data = await response.json();
-
-                const utcTimestamp = data.dt * 1000;
-                const timezoneOffsetMs = data.timezone * 1000;
-                const localTime = new Date(utcTimestamp + timezoneOffsetMs);
-
-                const options = {
-                    timeZone: 'UTC',
-                    weekday: 'short',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
-                };
-
-                const splittingString = localTime.toLocaleString('en-US', options).split("at");
-                splittingString[0] = splittingString[0].replace(/,/g, '');
-
                 setWeather(data);
-                setTime(splittingString[1].trim());
-                setCurrentDate(splittingString[0].trim());
+
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -173,19 +154,18 @@ const WeatherInfo = () => {
                     const localTime = new Date(utcTimestamp + timezoneOffsetMs);
                     const options = {
                         timeZone: 'UTC',
-                        weekday: 'short',
                         month: 'long',
                         day: 'numeric',
                         hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit'
+                        minute: '2-digit'
                     };
 
                     const splittingString = localTime.toLocaleString('en-US', options).split("at");
                     splittingString[0] = splittingString[0].replace(/,/g, '');
 
-                    const time = splittingString[1].trim();
-                    listOfHours[i].dt_txt = time;
+                    const fullTime = localTime.toLocaleString('en-US', options);
+                    listOfHours[i].dt_txt = fullTime;
+
                 }
 
                 setHourlyForecast(hourlyData.list.slice(0, 96));
@@ -197,6 +177,52 @@ const WeatherInfo = () => {
 
         fetchForecasts();
     }, [lat, lon]);
+
+    useEffect(() => {
+        const updateClock = (offset) => {
+            const now = new Date();
+            const localTime = new Date(now.getTime() + offset);
+            const options = {
+                timeZone: 'UTC',
+                weekday: 'short',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+            };
+            const parts = localTime.toLocaleString('en-US', options).split(' at ');
+            const [date, time] = parts.length === 2
+                ? [parts[0].replace(/,/g, ''), parts[1]]
+                : [now.toLocaleDateString('en-US'), now.toLocaleTimeString('en-US')];
+
+            setCurrentDate(date);
+            setTime(time);
+        };
+
+        let intervalId;
+
+        const intializeClock = async () => {
+            try {
+                const response = await fetch(`/weather?lat=${lat}&lon=${lon}`);
+                if (!response.ok) throw new Error("Failed to fetch weather data");
+    
+                const data = await response.json();
+                const timezoneOffsetMs = data.timezone * 1000;
+    
+                updateClock(timezoneOffsetMs); // Initial run
+                intervalId = setInterval(() => updateClock(timezoneOffsetMs), 1000); // Update every second
+            } catch (err) {
+                console.error("Error initializing clock:", err);
+                setError(err.message);
+            }
+        };
+
+        intializeClock();
+
+        return () => clearInterval(intervalId); // cleanup
+    }, []);
+
 
     const getMoonPhase = (phase) => {
         if (phase === 0) return "New Moon";
@@ -211,10 +237,9 @@ const WeatherInfo = () => {
     };
 
     const saveLocation = async () => {
-        if (buttonText === 'Save Location') {
-            setButtonText('Un-save Location');
-
-            try {
+        try {
+            if (buttonText === 'Save Location') {
+                // Save the location
                 const response = await fetch('/save-location', {
                     method: 'POST',
                     headers: {
@@ -232,14 +257,8 @@ const WeatherInfo = () => {
                 }
 
                 setButtonText('Un-save Location');
-                alert('Location saved successfully');
-
-            } catch (error) {
-                console.error('Error saving location:', error);
-                alert('Failed to save location');
-            }
-        } else {
-            try {
+            } else {
+                // Un-save the location
                 const response = await fetch(`/delete-location/${encodeURIComponent(location)}`, {
                     method: 'DELETE',
                     headers: {
@@ -250,13 +269,12 @@ const WeatherInfo = () => {
                 if (!response.ok) {
                     throw new Error('Failed to delete location');
                 }
-                alert('Location deleted successfully');
 
-            } catch (error) {
-                console.error('Error deleting location:', error);
-                alert('Failed to delete location');
+                setButtonText('Save Location');
             }
-            setButtonText('Save Location');
+        } catch (error) {
+            console.error('Error:', error);
+            alert(`Failed to ${buttonText === 'Save Location' ? 'save' : 'delete'} location`);
         }
     };
 
@@ -275,7 +293,7 @@ const WeatherInfo = () => {
 
                     <Link to="/"><button style={{ position: 'absolute', bottom: '5%', right: '5%' }} className={"button"}>SEARCH</button></Link>
                     <Link to="/saved"><button style={{ position: 'absolute', bottom: '5%', right: '17.5%' }} className={"button"}>SAVED LOCATIONS</button></Link>
-                    <button style={{ position: 'absolute', bottom: '5%', right: '30%' }} className={"button"} onClick={saveLocation}>SAVE THIS LOCATION</button>
+                    <button style={{ position: 'absolute', bottom: '5%', right: '30%' }} className={"button"} onClick={saveLocation}>{buttonText}</button>
                     <button onClick={() => toggleUnitChoice(setIsMetric)} style={{ position: 'absolute', bottom: '5%', right: '42.5%' }} className={"button"}>
                         {isMetric ? "SWITCH TO IMPERIAL" : "SWITCH TO METRIC"}
                     </button>
@@ -321,29 +339,21 @@ const WeatherInfo = () => {
                                     <p>
                                     </p>
                                         {viewMode === 'hourly' ? (
-                                            <p style={{ fontWeight: 'bold', fontSize: '60px', position: 'relative', marginTop: '-5%', marginBottom: '-5%' }}>{item?.main?.temp ? `${item.main.temp.toFixed(0)}°F` : 'N/A'}</p>
+                                            <p style={{ fontWeight: 'bold', fontSize: '60px', position: 'relative', marginTop: '-5%', marginBottom: '-5%' }}>{(isMetric ? (item.main.temp - 32) * (5 / 9) : item.main.temp).toFixed(0)}°{isMetric ? 'C' : 'F'}</p>
                                         ) : (
                                             <>
-                                                <p>{item?.temp.max ? `Hi: ${item.temp.max.toFixed(0)}°F` : 'Hi: N/A'}</p> 
-                                                <p>{item?.temp.min ? ` Lo: ${item.temp.min.toFixed(0)}°F` : ' Lo: N/A'}</p>
+                                                <p>{(isMetric ? (item.temp.min - 32) * (5 / 9) : item.temp.min).toFixed(0)}°{isMetric ? 'C' : 'F'} / {(isMetric ? (item.temp.max - 32) * (5 / 9) : item.temp.max).toFixed(0)}°{isMetric ? 'C' : 'F'}</p>
                                             </>
                                         )}
 
                                         <p style={{ fontFamily: "Silkscreen", fontSize: '20px', position: 'relative', marginBottom: '30%' }}>{item.weather[0].main}</p>
 
                                         <p style={{ fontFamily: "Silkscreen", fontWeight: 'bold', fontSize: '11px', position: 'relative' }}>
-                                        {item.dt_txt}
+                                        <p style={{fontSize: '7px'}}>{item.dt_txt}</p>
                                     </p>
                                 </div>
                             ))}
                     </div>
-
-                    <div className="arrowControls">
-                        <button onClick={handlePrev}>←</button>
-                        <button onClick={handleNext}>→</button>
-                    </div>
-
-
 
                     <img
                         src={`http://openweathermap.org/img/w/${weather.weather[0].icon}.png`}
